@@ -1,6 +1,7 @@
 <?php 
 session_start();
 
+include '../conexion/conexion.php';
 
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
 if ($_SESSION['dashboard']==1) {
@@ -396,68 +397,130 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <!-- START CONTENT -->
         <section id="content">
           <div class="row">
-           <h4 style="text-align:center;margin-top: 30px;">Seguimiento Pago</h4>
+           <h4 style="text-align:center;margin-top: 30px;">Seguimiento</h4>
 
 
 
                      <div class="col s12">
-            <div class="row">
-              <div class="input-field col s11 m11 l11" style="margin-left: 20px;">
-                <i class="material-icons prefix">search</i>
-                <input type="text" id="txtBuscar" class="autocomplete" >
-                <label for="autocomplete">Buscar Cliente</label>
-              </div>
-            </div>
+
               
                  <div class="row salida">
                    
                  </div>
+<?php
+date_default_timezone_set('America/Guatemala');
+$fecha_actual=date("d/m/Y");
+$hora_actual=date('H:i:s',time());
+$fechaCompleto=$fecha_actual.' '.$hora_actual;
+
+//crear el codigo del mes de manera dinamica sin que intervencion humana
+
+
+$mesActual = date('m');
+$anoActual = date('y');
+
+ $query1 = ("SELECT idempresa,razonSocial FROM empresa where estado=1"); 
+            $buscarEmpresa = $dbConn->prepare($query1);
+            $buscarEmpresa->execute();
+
+
+
+ ?>
+           
+            <table class="card col s11 m11 l11 responsive-table striped centered" style="margin-left: 5%;">
+        <thead>
+          <tr>
+            <td colspan="6" style="text-align: center;">Año 2019</td>
+            <td colspan="10" style="text-align: center;">Año 2020</td>
+            </tr>
+          <tr>
+              <th>Cliente</th>
+              <th>Mes 09</th>
+              <th>Mes 10</th>
+              <th>Mes 11</th>
+              <th>Mes 12</th>
+              <?php for ($k=1; $k <=$mesActual; $k++) { 
+                if($k<=9){
+                  $mesActualFormato='Mes 0'.$k.'';
+
+                }else{
+                  $mesActualFormato=$k;
+                }
+            echo  '<th>'.$mesActualFormato.'</th>';
+              } ?>
+              
+
+              <th>Saldo Actual</th>
+          </tr>
+        </thead>
+
+        <tbody>
+<?php 
+  while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+$sumaPendiente=0;
+$iteracion=0;
+
+
+ $query2 = ("SELECT * FROM factura left join pagos on factura.numeroFactura=pagos.noFactura where factura.idCliente=:idempresa and codigoMes>=1909" ); 
+            $buscarPagos = $dbConn->prepare($query2);
+            $buscarPagos->bindParam(':idempresa', $datos1['idempresa'], PDO::PARAM_INT);
+            $buscarPagos->execute();
+            $hayPagos=$buscarPagos->rowCount();
+
+?>
+
+          <tr>
+            <td><?php echo $datos1['razonSocial']; ?> </td>
+
+            
+          <?php 
+
+
+
+           while ($datos2=$buscarPagos->fetch(PDO::FETCH_ASSOC)){
+            @$iteracion+=1;
+
+
+   $saldoActual=$datos2['montoFactura']-$datos2['monto']; 
+   if($saldoActual==0 or $saldoActual<0){
+    $saldoMostrar='<p class="chip green darken-2">Q.0</p>';
+    @$sumaPendiente+=0;
+   }else{
+    $saldoMostrar='<p class="chip red darken-2">Q.'.$saldoActual.'</p>';
+     @$sumaPendiente+=$saldoActual;
+   }
+
+
+
+   ?>  
+
+
+            <td><?php echo $saldoMostrar; ?> </td>
+        <?php }
+
+          $totalTabla=10-$iteracion;
+            
+          for($n=1; $n <=$totalTabla; $n++) { 
+
+         ?>
+
+         <td><p class="chip">--</p></td>
+
+
+       <?php } ?>
+
+
+
+        <td colspan=""><?php echo 'Q.'.$sumaPendiente; ?></td>
+ 
+
+          </tr>
+<?php } ?>
+        </tbody>
+      </table>
               
           </div>
-          <div class="col l1 m1 s1"></div>
-           <div class="col s12 m10 l10 card-width">
-        <div class="card card-border center-align gradient-45deg-indigo-purple">
-          <div class="card-content white-text">
-            <div class="col s12"><i class="material-icons right">event_busy</i></div>
-           
-            <h5 class="white-text mb-1">Nombre Cliente</h5>
-            <p class="chip orange darken-1">Monto Pendiente</p>
-            <h2 class="m-0" >Q.299.00</h2>
-            <p class="chip red accent-4">Fecha Corte: <span style="font-size: 15pt;">10/5/2020</span></p>
-            <p class="mt-8">
-             
-            </p>
-            <div class="row">
-            <div class="input-field col s12 m11 l11">
-                    <input id="last_name" type="text">
-                    <label for="last_name" class="">Comentario de seguimiento</label>
-                  </div>
-            <a class="btn-floating mb-1 btn-large waves-effect waves-light mr-1">
-                    <i class="material-icons">send</i>
-                  </a>
-            </div>
-
-            <div class="card" style="padding: 5px;">
-              <p style="color: black; text-align: left;">Comentario seguimiento</p>
-              <p style="color:black; text-align: right; font-size:8pt;">05/05/2020 8:00</p>
-            </div>
-            <div class="card" style="padding: 5px;">
-              <p style="color: black; text-align: left;">Comentario seguimiento</p>
-              <p style="color:black; text-align: right; font-size:8pt;">05/05/2020 8:00</p>
-            </div>
-            <div class="card" style="padding: 5px;">
-              <p style="color: black; text-align: left;">Comentario seguimiento</p>
-              <p style="color:black; text-align: right; font-size:8pt;">05/05/2020 8:00</p>
-            </div>
-            <div class="card" style="padding: 5px;">
-              <p style="color: black; text-align: left;">Comentario seguimiento</p>
-              <p style="color:black; text-align: right; font-size:8pt;">05/05/2020 8:00</p>
-            </div>
-
-            <div></div>
-
-          </div>
-        </div>
+      
       </div>
 
 

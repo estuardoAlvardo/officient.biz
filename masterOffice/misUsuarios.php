@@ -1,6 +1,7 @@
 <?php 
 session_start();
 
+include '../conexion/conexion.php';
 
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
 if ($_SESSION['dashboard']==1) {
@@ -397,16 +398,194 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <section id="content">
           <!--start container-->
           <div class="container">
-            <!--card stats start-->
-           
-            
-            <!--card widgets end-->
-            
-            <!--work collections start-->
-            
-            <!--work collections end-->
-            
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
+          <?php 
+
+
+ $query1 = ("SELECT * FROM empresa where idempresa=:idempresa");
+            $buscarEmpresa = $dbConn->prepare($query1);
+            $buscarEmpresa->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
+            $buscarEmpresa->execute();
+  
+
+   while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+    
+     $query2 = ("SELECT * FROM usuario where idEmpresa=:idEmpresa");
+            $buscarUsuariosAsignados = $dbConn->prepare($query2);
+            $buscarUsuariosAsignados->bindParam(':idEmpresa', $datos1['idempresa'], PDO::PARAM_INT); 
+            $buscarUsuariosAsignados->execute();
+            $usuariosRegistrados=$buscarUsuariosAsignados->rowCount();
+
+        
+
+?>
+
+
+
+<h5 style="margin-top: 20px; text-align: center"><?php echo $datos1['razonSocial']; ?></h5> 
+
+<table class="card">
+        <thead>
+          <th colspan="8" style="text-align: center;">Mis usuarios</th>
+          <tr>
+             <div class="col s6 m6 l6"><a class="btn-floating btn-large waves-effect cyan lighten-2 modal-trigger" href="#modal1"><i class="material-icons" onclick="modaCrearPrivilegio();">add</i></a></div>
+          </tr>
+          <tr>
+
+         
+              <th>Nombre y apellido</th>
+              <th>Correo</th>
+              <th>Cargo</th>
+              <th>Telefono</th>
+              <th>Usuario</th>
+              <th>Contraseña</th>
+              <th>Fecha Registro</th>
+              <th>Estado Usuario</th>
+              <th>Desactivar</th>
+          </tr>
+        </thead>
+         <tbody>
+          <?php   if($usuariosRegistrados==0){   ?>
+
+
+            <td colspan="8" style="text-align: center;">No hay usuarios asignados!</td>
+
+
+          <?php } while ($datos2=$buscarUsuariosAsignados->fetch(PDO::FETCH_ASSOC)){ ?>
+        <tr>
+          <td><?php echo $datos2['nombre'].' '.$datos2['apellido']; ?></td>
+          <td><?php echo $datos2['correo']; ?></td>
+          <td><?php echo $datos2['cargo']; ?></td>
+          <td><?php echo $datos2['telefono']; ?></td>
+          <td><?php echo $datos2['usuario']; ?></td>
+          <td><?php echo $datos2['contrasena']; ?></td>
+          <td><?php echo $datos2['fechaRegistro']; ?></td>
+          <td><?php if($datos2['estadoUsuario']==1){
+            echo '<p class="chip green darken-1" style="color: white">Activo</p>';
+          }else{
+            echo '<p class="chip red darken-1" style="color: white">Inactivo</p>';
+
+          } ?></td>
+          <td><div class="switch">
+    <label>
+      
+      <input type="checkbox" <?php           if($datos2['estadoUsuario']==1){
+            $activo='checked';
+          }else{
+              $activo='';
+
+          } echo $activo; ?>  onclick="desactivarUsuario(this.checked,<?php echo $datos2['idCliente']?>);">
+      <span class="lever"></span>
+      
+    </label>
+  </div></td>
+
+
+
+
+
+        </tr>
+        <?php ?>
+         </tbody> 
+
+
+<?php } } ?>
+ </table>
+
+
+ <!-- Modal para insertar inicio -->
+                      <div id="modal1" class="modal">
+                        <div class="modal-content">
+                          <div class="col s12 m12 l12">
+                            <h5>Crear un nuevo Privilegio</h5>
+                        <form id="insertarUsuarios" >
+                          <input type="text" name="accionEjecutar" id="accionEjecutar" value="1" style="display: none;">
+                          <div class="row">
+
+                            <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtUsuario" name="txtUsuario" type="text">
+                              <label for="first_name">Usuario</label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtContrasena" name="txtContrasena" type="text">
+                              <label for="first_name">Contraseña</label>
+                            </div>
+                          </div>
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtNombre" name="txtNombre" type="text">
+                              <label for="first_name">Nombre</label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtApellido" name="txtApellido" type="text">
+                              <label for="first_name">Apellido</label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtTelefono" name="txtTelefono" type="text">
+                              <label for="first_name">Telefono</label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtCorreo" name="txtCorreo" type="text">
+                              <label for="first_name">Correo</label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtCargo" name="txtCargo" type="text">
+                              <label for="first_name">Cargo</label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtDireccion" name="txtDireccion" type="text">
+                              <label for="first_name">Dirección</label>
+                            </div>
+                          </div>
+
+                          <div class="row" style="display: none">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtIdEmpresa" name="txtIdEmpresa"  type="text"  value="<?php echo $_GET['user']; ?>">
+                              <label for="first_name">idEmpresa</label>
+                            </div>
+                          </div>
+                         
+                          <div class="row">
+                            <div class="row">
+                              <div class="input-field col s8 m8 l8 left">
+                                <a class="modal-close btn waves-effect  indigo darken-4 right" onclick="insertarUsuarios();">Guardar
+                                  <i class="material-icons right">send</i>
+                                </a>
+                              </div>
+                              <div class="col s1 m1 l1"></div>
+                              <div class="input-field col s3 m3 l3">
+                                <a href="#!" class="modal-close btn waves-effect waves-light right">Cerra
+                                  <i class="material-icons right">close</i>
+                                </a>
+                               
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+
+
+
+                  </div>
+                </div>
+              </div>
+             <!-- Modal para insertar fin  -->
+
           </div>
           <!--end container-->
         </section>
@@ -697,6 +876,60 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
           </div>
         </div>
     </footer>
+<p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
+
+
+    <script type="text/javascript">
+      
+      var uri1=$("#uriEnviar").text();
+       function modaCrearPrivilegio(){
+      $("#modal1").modal();
+     }
+
+
+     function insertarUsuarios(){ 
+      var datosGuardar= $("#insertarUsuarios").serialize();
+      alert(datosGuardar);
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/insertarUsuarioC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Se ha creado un usuario de manera correcta!! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+     }
+
+
+     function desactivarUsuario(estado,idUsuario){
+      alert('estado '+estado+' idUsuario '+idUsuario);
+
+       $.ajax({
+        type: "POST",
+        url: uri1+"controller/insertarUsuarioC.php",
+        data:{
+          "accionEjecutar": 2,
+          "estado": estado,
+          "idUsuario":idUsuario  
+        },
+        success:function(r){
+          
+            M.toast({html: 'Se ha actualizado el estado del usuario!! :)', classes: 'rounded'});
+            
+        }
+
+      }); 
+
+
+
+     }
+
+    </script>
     <!-- END FOOTER -->
     <!-- ================================================
     Scripts

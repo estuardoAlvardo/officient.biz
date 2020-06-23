@@ -129,10 +129,10 @@ if (empty($row1['nit'])) {
                       <p>
                       </p>
                       <div class="row">
-                      <a class="waves-effect indigo darken-2 btn-small">Servicios</a>
-                      <a class="waves-effect indigo darken-2 btn-small">Estado de cuenta</a>
-                      <a class="waves-effect pink darken-3 btn-small" style="margin-top: 20px;">Usuarios Asignados</a>
-                      <a class="waves-effect pink darken-3 btn-small" style="margin-top: 20px;">Archivo</a>
+                      <a class="waves-effect indigo darken-2 btn-small" href="misServicios.php?user='.$row1['idempresa'].'">Servicios</a>
+                      <a class="waves-effect indigo darken-2 btn-small" href="estadoCuenta.php?user='.$row1['idempresa'].'&acount='.$row1['razonSocial'].'">Estado de cuenta</a>
+                      <a class="waves-effect pink darken-3 btn-small" style="margin-top: 20px;" href="misUsuarios.php?user='.$row1['idempresa'].'">Usuarios Asignados</a>
+                      <a class="waves-effect pink darken-3 btn-small" href="miArchivo.php?user='.$row1['idempresa'].'" style="margin-top: 20px;">Archivo</a>
                      
                       </div>
 

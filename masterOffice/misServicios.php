@@ -1,6 +1,7 @@
 <?php 
 session_start();
 
+include '../conexion/conexion.php';
 
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
 if ($_SESSION['dashboard']==1) {
@@ -397,17 +398,72 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <section id="content">
           <!--start container-->
           <div class="container">
-            <!--card stats start-->
-           
-            
-            <!--card widgets end-->
-            
-            <!--work collections start-->
-            
-            <!--work collections end-->
-            
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
-          </div>
+
+
+<?php
+
+      $query1 = ("SELECT * FROM empresa where idempresa=:idempresa");
+            $buscarEmpresa = $dbConn->prepare($query1);
+            $buscarEmpresa->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
+            $buscarEmpresa->execute();
+  
+
+   while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+
+    //obtener el nombre del paquete
+    $query2 = ("SELECT * FROM paquete where idpaquete=:idpaquete ");
+    $buscarPaquetes = $dbConn->prepare($query2);
+    $buscarPaquetes->bindParam(':idpaquete', $datos1["paqueteAsignado"], PDO::PARAM_INT); 
+    $buscarPaquetes->execute();
+
+    if(empty($datos1['paqueteAsignado'])){
+      echo '<h1 class="chip" style="margin-top:100px; margin-left:300px;"> '.$datos1['razonSocial'].' no tiene asignado ningún paquete. :(<i class="close material-icons">close</i></h1>';
+    }
+
+   while ($paquete=$buscarPaquetes->fetch(PDO::FETCH_ASSOC)){
+
+    //obtener los servicios del paquete
+
+    $query3 = ("SELECT * FROM registrosPaquetes JOIN servicio on registrosPaquetes.idServicio=servicio.idServicio where idPaquete=:idPaquete ");
+    $buscamosServicios = $dbConn->prepare($query3);
+    $buscamosServicios->bindParam(':idPaquete', $datos1["paqueteAsignado"], PDO::PARAM_INT); 
+    $buscamosServicios->execute();
+    
+
+ ?>
+
+         <h5 style="margin-top: 20px; text-align: center"><?php echo $datos1['razonSocial']; ?></h5> 
+        
+
+         <div class="col s12 m12 l6">
+            <ul id="projects-collection" class="collection z-depth-1 animate fadeLeft">
+        
+               <li class="collection-item avatar">
+                  <i class="material-icons cyan circle">add_shopping_cart</i>
+                  <h6 class="chip indigo darken-4" style="color: white;"><?php echo $paquete['nombrePaquete']; ?></h6><br><br>
+                  <p><strong style="font-size: 18pt;"><?php echo 'Q. '.$paquete['totalPaquete']; ?></strong> </p>
+                  <p class="chip light-blue right" style="color: black;"><?php echo 'Fecha corte del servicio: '.$datos1['fechaCorte']; ?></p><br><br>
+               </li>
+          <?php while ($servicios=$buscamosServicios->fetch(PDO::FETCH_ASSOC)){ ?>
+               <li class="collection-item">
+                  <div class="row">
+                     <div class="col s6">
+                        <p class="collections-title"><?php echo $servicios['nombre'] ?></p>
+                        <p class="collections-title"><?php echo $servicios['descripcion'] ?></p>
+
+                     
+                     </div>
+                  </div>
+               </li>
+        <?php }  ?>       
+            </ul>
+         </div>
+
+
+
+
+
+<?php  } } ?>
           <!--end container-->
         </section>
         <!-- END CONTENT -->

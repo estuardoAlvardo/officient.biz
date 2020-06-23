@@ -1,7 +1,7 @@
 <?php 
 session_start();
 
-
+include '../conexion/conexion.php';
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
 if ($_SESSION['dashboard']==1) {
 	$dasboard='display:block;';
@@ -397,16 +397,69 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <section id="content">
           <!--start container-->
           <div class="container">
-            <!--card stats start-->
-           
             
-            <!--card widgets end-->
-            
-            <!--work collections start-->
-            
-            <!--work collections end-->
-            
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+<?php 
+ $query1 = ("SELECT * FROM empresa where idempresa=:idempresa");
+            $buscarEmpresa = $dbConn->prepare($query1);
+            $buscarEmpresa->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
+            $buscarEmpresa->execute();
+  
+
+   while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+    
+     $query1 = ("SELECT * FROM archivo JOIN requisitosOficina on archivo.idRequisito=requisitosOficina.idRequisito where idempresa=:idempresa");
+            $buscarRequisitos = $dbConn->prepare($query1);
+            $buscarRequisitos->bindParam(':idempresa', $datos1['idempresa'], PDO::PARAM_INT); 
+            $buscarRequisitos->execute();
+            $sinRegistros=$buscarRequisitos->rowCount();
+
+
+
+?>
+
+
+  <h5 style="margin-top: 20px; text-align: center"><?php echo $datos1['razonSocial']; ?></h5> 
+
+<table class="card">
+        <thead>
+          <th colspan="3" style="text-align: center;">Mi Archivo (Registro de documentos que se tienen en fisico)</th>
+          <tr>
+
+              <th></th>
+              <th>Requisito</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <?php if($sinRegistros==0){
+
+           ?>
+
+           <td colspan="4" style="text-align: center;">No hay nada en el archivo!</td>
+
+
+         <?php  } ?>
+                      <?php  while ($datos2=$buscarRequisitos->fetch(PDO::FETCH_ASSOC)){
+     ?>
+          <tr>
+            <td></td>
+ 
+            <td><?php echo $datos2['requisito'];  ?></td>
+            <td><?php echo $datos2['descripcion'];  ?></td>
+            <td><p class="chip light-blue lighten-1" >En oficina</p></td>
+          
+          </tr>
+        <?php } ?>    
+        </tbody>
+      </table>
+
+
+
+
+<?php } ?>
           </div>
           <!--end container-->
         </section>

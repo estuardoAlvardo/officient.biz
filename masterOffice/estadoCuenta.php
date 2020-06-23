@@ -2,6 +2,24 @@
 session_start();
 
 
+date_default_timezone_set('America/Guatemala');
+$fecha_actual=date("d/m/Y");
+$hora_actual=date('H:i:s',time());
+$fechaCompleto=$fecha_actual.' '.$hora_actual;
+
+//crear el codigo del mes de manera dinamica sin que intervencion humana
+
+
+$mesActual = date('m');
+$anoActual = date('y');
+
+
+
+$datoBuscar=$anoActual.$mesActual;
+
+
+include '../conexion/conexion.php';
+
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
 if ($_SESSION['dashboard']==1) {
 	$dasboard='display:block;';
@@ -78,8 +96,84 @@ if ($_SESSION['archivos']==1) {
 
 
 
-//echo $dashboard;
+switch ($mesActual) {
+  case 1:
 
+    $mesMostrar='Enero';
+
+
+    break;
+
+  case 2:
+
+    $mesMostrar='Febrero';
+
+
+  break;
+    
+  case 3:
+    
+   $mesMostrar='Marzo';
+
+  break;
+
+  case 4:
+    $mesMostrar='Abril';
+
+  break;
+
+  case 5:
+
+    $mesMostrar='Mayo';
+
+  break;
+  
+  case 6:
+    $mesMostrar='Junio';
+
+
+  break;
+
+  case 7:
+  $mesMostrar='Julio';
+
+  break;
+
+  case 8:
+
+  $mesMostrar='Agosto';
+
+  break;
+  
+  case 9:
+  $mesMostrar='Septiembre';
+
+
+  break;
+  
+  case 10:
+  $mesMostrar='Octubre';
+
+  break;
+  
+
+  case 11:
+  $mesMostrar='Noviembre';
+
+  break;
+  
+  case 12:
+
+  $mesMostrar='Diciembre';
+
+  break;
+  
+
+  default:
+$mesMostrar='No hay mes';
+
+    break;
+}
 
 
 ?>
@@ -87,7 +181,7 @@ if ($_SESSION['archivos']==1) {
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Estado Cuenta - <?php echo $_SESSION['nombre']; ?></title>
+	<title>Estado de cuenta <?php echo $_GET['acount']; ?> - www.officient.biz/asistenteVirtual</title>
 	<link  rel="icon"   href="../img/logo.ico" type="image/ico" />
 	    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -397,16 +491,198 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <section id="content">
           <!--start container-->
           <div class="container">
-            <!--card stats start-->
-           
+       <?php
+         $query1 = ("SELECT * FROM empresa where idempresa=:idempresa");
+            $buscarEmpresa = $dbConn->prepare($query1);
+            $buscarEmpresa->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
+            $buscarEmpresa->execute();
+
+            $query4 = ("SELECT * FROM factura left join pagos on factura.numeroFactura=pagos.noFactura where factura.idCliente=:idempresa and codigoMes=:codigoMes");
+            $buscarAbonos = $dbConn->prepare($query4);
+            $buscarAbonos->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
+            $buscarAbonos->bindParam(':codigoMes', $datoBuscar, PDO::PARAM_INT); 
+            $buscarAbonos->execute();
+
+            $noHayAbono=$buscarAbonos->rowCount();
+            if($noHayAbono==0){
+              $abonosMes=0;
+            }
+            while ($datos4=$buscarAbonos->fetch(PDO::FETCH_ASSOC)){
+               $abonosMes=$datos4['monto'];
+            }
+
+  
+            while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+
+               $query2 = ("SELECT * FROM factura left join pagos on factura.numeroFactura=pagos.noFactura where factura.idCliente=:idempresa and codigoMes>=1909 and codigoMes<:mesActual" ); 
+            $buscarPagos = $dbConn->prepare($query2);
+            $buscarPagos->bindParam(':idempresa', $datos1['idempresa'], PDO::PARAM_INT);
+            $buscarPagos->bindParam(':mesActual', $datoBuscar, PDO::PARAM_INT);
+            $buscarPagos->execute();
+            $hayPagos=$buscarPagos->rowCount();
+
+            while ($datos3=$buscarPagos->fetch(PDO::FETCH_ASSOC)){
+               @$saldoAnterior+=$datos3['montoFactura']-$datos3['monto'];
+
+            }
+
             
-            <!--card widgets end-->
-            
-            <!--work collections start-->
-            
-            <!--work collections end-->
-            
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
+        ?>     
+
+<h5 style="margin-top: 20px; text-align: center"><?php echo $datos1['razonSocial']; ?></h5> 
+
+
+<div class="col s1 m1 l1"></div>
+
+      <div class="col xl9 m8 s12 l9">
+      <div class="card">
+<div style="padding: 10px;">
+<a class="btn-floating btn-large waves-effect waves-light red" onclick="imprimirEstado();"><i class="material-icons">local_printshop
+</i></a>
+</div>       
+
+ <div class="card-content invoice-print-area" id="estadoCuenta">
+          <!-- header section -->
+          <div class="row invoice-date-number">
+            <div class="col xl4 s12">
+              <span>6ta Av. "A" 13-24 zona 9<br></span>
+              <span>Torre empresarial Cannet of 103<br></span>
+              <span>Guatemala, Guatemala<br></span>
+              <span>PBX(502) 2381-0888</span>
+
+            </div>
+            <div class="col xl8 s12">
+              <div class="invoice-date display-flex align-items-center flex-wrap">
+                <div class="mr-3" style="text-align: right;">
+                  <small>Fecha Actual:</small>
+                  <span><?php echo $fechaCompleto; ?></span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- logo and title -->
+          <div class="row mt-3 invoice-logo-title">
+            <div class="col m6 s12 display-flex invoice-logo mt-1 push-m6">
+              <img src="../img/logo.png" alt="logo" height="100" width="100">
+            </div>
+            <div class="col m6 s12 pull-m6">
+              <h4 class="indigo-text">Officient S.A</h4>
+            </div>
+
+          </div>
+           <h5>Nombre Cliente: <span style="font-size:15pt;"><?php echo $datos1['razonSocial']; ?></span></h5>
+           <h5>Estado de cuenta actual: <span style="font-size:15pt;"><?php echo $mesMostrar; ?></span></h5>
+          
+          <div class="divider mb-3 mt-3"></div>
+
+          <!-- invoice address and contact -->
+          <div class="row invoice-info">
+      <table class="striped ">
+        <thead>
+          <tr>
+              <th>Cargos del mes</th>
+              <th>Precio</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+   <?php 
+   $query3 = ("SELECT * FROM extras where codigoMes=:codigoMes and idCliente=:idCliente" ); 
+            $buscarExtras = $dbConn->prepare($query3);
+            $buscarExtras->bindParam(':codigoMes', $datoBuscar, PDO::PARAM_INT);
+            $buscarExtras->bindParam(':idCliente', $datos1['idempresa'], PDO::PARAM_INT);
+            $buscarExtras->execute();
+            $hayExtras=$buscarExtras->rowCount();
+
+
+ while ($datos2=$buscarExtras->fetch(PDO::FETCH_ASSOC)){
+    @$totalExtras+=$datos2['totalExtra'];
+
+   ?>       
+          <tr>
+            <td><?php echo $datos2['descripcion']; ?></td>
+            <td><?php echo 'Q.'.$datos2['totalExtra']; ?></td>
+          </tr>
+  <?php } ?>
+          <tr>
+            <td >Subtotal mes actual:</td>
+            <td><?php echo 'Q'.sprintf("%.2f", $totalExtras); ?></td>
+          </tr>
+
+
+        </tbody>
+      </table>
+
+
+      <h5></h5>
+      <table class="striped ">
+        <thead>
+          <tr>
+              <th>Resumen</th>
+              <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+          <td>Saldo Anterior</td>
+          <td><?php if($saldoAnterior<=0){$saldoAnterior=0; } echo 'Q.'.$saldoAnterior; ?></td>
+          </tr>
+          <tr>
+          <td>Abonos Realizado</td>
+          <td><?php echo 'Q.'.$abonosMes; ?></td>
+          </tr>
+
+          <tr>
+          <td>Total Cargos Mes</td>
+          <td><?php $totalCargo=$totalExtras; echo 'Q.'.$totalCargo; ?></td>
+          </tr>
+
+        </tbody>
+       </table>   
+
+
+          </div>
+        
+          <!-- product details table-->
+          <div class="invoice-product-details">
+          
+          </div>
+          <!-- invoice subtotal -->
+          <div class="divider mt-3 mb-3"></div>
+          <div class="invoice-subtotal">
+            <div class="row">
+              <div class="col m5 s12">
+                
+              </div>
+              <div class="col xl4 m7 s12 offset-xl3">
+                <ul>
+                  <li class="divider mt-2 mb-2"></li>
+                  <li class="display-flex justify-content-between">
+                    <span class="invoice-subtotal-title">Total a Pagar</span>
+                    <h6 class="invoice-subtotal-value"><span style="font-size:18pt;">Q.<span><?php $totalFinal=$saldoAnterior+$totalExtras-$abonosMes; echo $totalFinal ?></h6>
+                  </li>
+                  <li class="display-flex justify-content-between">
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+<?php } ?>
+
+
           </div>
           <!--end container-->
         </section>
@@ -513,6 +789,21 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
 
     }
     setInterval(mostrarEventos,1000);
+
+
+
+function imprimirEstado(){
+  //alert('fuciono'); 
+  var cantenido=document.getElementById('estadoCuenta').innerHTML;
+  var contenidoEstado=document.body.innerHTML;
+
+  document.body.innerHTML = cantenido;
+
+   window.print();
+   document.body.innerHTML = contenidoEstado;
+}
+
+
 
     </script>
     <!-- END FOOTER -->
