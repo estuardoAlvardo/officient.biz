@@ -196,14 +196,7 @@ $q1 = ("SELECT * FROM empresa where estado=1 or estado=2 or estado=3 order by es
                   </i>
                 </a>
               </li>
-              <li>
-                <a href="javascript:void(0);" class="waves-effect waves-block waves-light profile-button" data-activates="profile-dropdown">
-                  <span class="avatar-status avatar-online">
-                    <img src="../img/avatar/avatar-7.png" alt="avatar">
-                    <i></i>
-                  </span>
-                </a>
-              </li>
+             
               <li>
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
@@ -295,25 +288,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                 <div class="col col s8 m8 l8">
                   <ul id="profile-dropdown-nav" class="dropdown-content">
                     <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">face</i> Profile</a>
+                      <a href="perfil.php" class="grey-text text-darken-1">
+                        <i class="material-icons">face</i> Perfil</a>
                     </li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">settings</i> Settings</a>
-                    </li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">live_help</i> Help</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">lock_outline</i> Lock</a>
-                    </li>
+                   
                     <li>
                       <a href="../controller/logout.php" class="grey-text text-darken-1">
-                        <i class="material-icons">keyboard_tab</i> Logout</a>
+                        <i class="material-icons">keyboard_tab</i> Salir</a>
                     </li>
                   </ul>
                   <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown-nav"><?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?><i class="mdi-navigation-arrow-drop-down right"></i></a>
@@ -581,12 +562,12 @@ switch ($row1["periodo"]) {
                             <h5>Registro Llamada</h5>
                         <form id="formularioRegistro" >
                           <input type="text" name="idUsuario" id="idUsuario" value="<?php echo $_SESSION['idCliente']; ?>" style="display: none;">
-                          <input type="text" name="idEmpresa" id="idEmpresa" value="" style="display: none;">
+                          <input type="text" name="idEmpresa" id="idEmpresa" value="" style="display: block;">
                           <input type="text" name="accionEjecutar" id="accionEjecutar" value="1" style="display: none;">
                            <div class="row">
                              <div class="input-field col s12 m12 l12 ">
  
-                              <input id="txtEmpresa" name="txtEmpresa" type="text" value="" autofocus>
+                              <input id="txtEmpresa" name="txtEmpresa" type="text" value="<?php echo $_SESSION['empresa']; ?>" autofocus>
                               <label for="first_name">Empresa</label>
                            
                             </div>
@@ -999,7 +980,7 @@ function registrarCita(){
         data: datosGuardar,
         success:function(r){
           
-            M.toast({html: 'Cita Agendada! :)', classes: 'rounded'});
+            M.toast({html: 'Solicitud de cita enviada! :)', classes: 'rounded'});
             
         }
 

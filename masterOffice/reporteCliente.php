@@ -189,14 +189,7 @@ if ($_SESSION['archivos']==1) {
                   </i>
                 </a>
               </li>
-              <li>
-                <a href="javascript:void(0);" class="waves-effect waves-block waves-light profile-button" data-activates="profile-dropdown">
-                  <span class="avatar-status avatar-online">
-                    <img src="../img/avatar/avatar-7.png" alt="avatar">
-                    <i></i>
-                  </span>
-                </a>
-              </li>
+              
               <li>
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
@@ -288,25 +281,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                 <div class="col col s8 m8 l8">
                   <ul id="profile-dropdown-nav" class="dropdown-content">
                     <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">face</i> Profile</a>
+                      <a href="perfil.php" class="grey-text text-darken-1">
+                        <i class="material-icons">face</i> Perfil</a>
                     </li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">settings</i> Settings</a>
-                    </li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">live_help</i> Help</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">lock_outline</i> Lock</a>
-                    </li>
+                    
                     <li>
                       <a href="../controller/logout.php" class="grey-text text-darken-1">
-                        <i class="material-icons">keyboard_tab</i> Logout</a>
+                        <i class="material-icons">keyboard_tab</i> Salir</a>
                     </li>
                   </ul>
                   <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown-nav"><?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?><i class="mdi-navigation-arrow-drop-down right"></i></a>

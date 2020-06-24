@@ -3,6 +3,15 @@ session_start();
 include '../conexion/conexion.php';
 
 
+
+
+if($_SESSION['privilegio']==5){
+  $ocultarRegistros='display:none';
+}else{
+   $ocultarRegistros='';
+}
+
+
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
 if ($_SESSION['dashboard']==1) {
 	$dasboard='display:block;';
@@ -77,10 +86,48 @@ if ($_SESSION['archivos']==1) {
 	$archivos='display:none;';
 }
 
-
+if ($_SESSION['pendientesPago']==1) {
+  $pendientesPagos='display:block;';
+}else{
+  $pendientesPagos='display:none;';
+}
 
 //echo $dashboard;
+//links para clientes
 
+
+if ($_SESSION['miEstadoCuenta']==1) {
+  $miEstadoCuenta='display:block;';
+}else{
+  $miEstadoCuenta='display:none;';
+}
+
+if ($_SESSION['misServicios']==1) {
+  $misServicios='display:block;';
+}else{
+  $misServicios='display:none;';
+}
+
+if ($_SESSION['miArchivo']==1) {
+  $miArchivo='display:block;';
+}else{
+  $miArchivo='display:none;';
+}
+
+
+if ($_SESSION['misEventos']==1) {
+  $misEventos='display:block;';
+}else{
+  $misEventos='display:none;';
+}
+
+
+
+
+$q1 = ("SELECT * FROM empresa where idempresa=:idempresa");
+      $buscarEmpresa = $dbConn->prepare($q1);
+      $buscarEmpresa->bindParam(':idempresa', $_SESSION['empresa'], PDO::PARAM_INT);
+      $buscarEmpresa->execute();
 
 
 ?>
@@ -88,7 +135,7 @@ if ($_SESSION['archivos']==1) {
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Eventos - <?php echo $_SESSION['nombre']; ?></title>
+	<title>Asistente Virtual - <?php echo $_SESSION['nombre']; ?></title>
 	<link  rel="icon"   href="../img/logo.ico" type="image/ico" />
 	    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -106,15 +153,8 @@ if ($_SESSION['archivos']==1) {
 <body>
 	
 
-	
-
 </body>
-
-
 </html>
-
-
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -168,7 +208,7 @@ if ($_SESSION['archivos']==1) {
             <ul class="left">
               <li>
                 <h1 class="logo-wrapper">
-                  <a href="panelControl.php" class="brand-logo darken-1" >
+                  <a href="panelCliente.php" class="brand-logo darken-1" >
                     <img src="../img/logo2.png" alt="materialize logo">
                     <span class="logo-text hide-on-med-and-down">Officient</span>
                   </a>
@@ -191,8 +231,7 @@ if ($_SESSION['archivos']==1) {
                 </a>
               </li>
               
-              </li>
-              <li>
+              <li style="<?php echo $ocultarRegistros; ?> ">
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
                 </a>
@@ -237,13 +276,25 @@ if ($_SESSION['archivos']==1) {
             <!-- profile-dropdown -->
             <ul id="profile-dropdown" class="dropdown-content">
               <li>
-                <a href="perfil.php" class="grey-text text-darken-1">
-                  <i class="material-icons">face</i> Perfil</a>
+                <a href="#" class="grey-text text-darken-1">
+                  <i class="material-icons">face</i> Profile</a>
               </li>
-             
+              <li>
+                <a href="#" class="grey-text text-darken-1">
+                  <i class="material-icons">settings</i> Settings</a>
+              </li>
+              <li>
+                <a href="#" class="grey-text text-darken-1">
+                  <i class="material-icons">live_help</i> Help</a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="#" class="grey-text text-darken-1">
+                  <i class="material-icons">lock_outline</i> Lock</a>
+              </li>
               <li>
                 <a href="../controller/logout.php" class="grey-text text-darken-1">
-                  <i class="material-icons">keyboard_tab</i> Salir</a>
+                  <i class="material-icons">keyboard_tab</i> Logout</a>
               </li>
             </ul>
           </div>
@@ -274,7 +325,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                       <a href="perfil.php" class="grey-text text-darken-1">
                         <i class="material-icons">face</i> Perfil</a>
                     </li>
-                    
+                  
                     <li>
                       <a href="../controller/logout.php" class="grey-text text-darken-1">
                         <i class="material-icons">keyboard_tab</i> Salir</a>
@@ -355,6 +406,58 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   </a>
                 </li>
 
+                  <li class="bold" style="<?php echo $inicio; ?>">
+                  <a href="panelCliente.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">home</i>
+                    <span class="nav-text">Inicio</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $miEstadoCuenta; ?>">
+                  <a href="estadoCuenta.php?user=<?php echo $_SESSION['empresa']; ?>&acount=<?php echo $_SESSION['nombreEmpresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">pie_chart</i>
+                    <span class="nav-text">Estado de cuenta</span>
+                  </a>
+                </li>
+
+               <li class="bold" style="<?php echo $misServicios; ?>">
+                  <a href="misServicios.php?user=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">loyalty</i>
+                    <span class="nav-text">Mis Servicios</span>
+                  </a>
+                </li>
+
+                <li class="bold" style="<?php echo $miArchivo; ?>">
+                  <a href="miArchivo.php?user=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">unarchive</i>
+                    <span class="nav-text">Mi Archivo</span>
+                  </a>
+                </li>
+
+                <li class="bold" style="<?php echo $misEventos; ?>">
+                  <a href="misEventos.php?use=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">event</i>
+                    <span class="nav-text">Mis Eventos</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $buzonOfficient; ?>">
+                  <a href="estadoCuenta.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">markunread_mailbox</i>
+                    <span class="nav-text">Mi buzon de recepción</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $registroLlamadas; ?>">
+                  <a href="miRegistroLlamadas.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">call</i>
+                    <span class="nav-text">RegistroLlamadas</span>
+                  </a>
+                </li>
+
+                
+
+
               </ul>
             </li>
           </ul>
@@ -368,60 +471,29 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <section id="content">
           <!--start container-->
           <div class="container">
-            <h5 class="center">Gestor de eventos</h5>
+           <?php 
+             while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+              $_SESSION['nombreEmpresa']=$datos1['razonSocial'];
 
-<div class="col s12 card" style="border: 2px solid #22088D; border-radius: 5px;">
-  <h5 style="">Buscar Evento</h5>
-      <div class="row">
-        <div class="col s1 m1 l1"></div>
-        <div class="col s5 m5 l5">
-        <div class="row">
-        <div class="col s6 m6 l3">
-        <p>
-          <label>
-            <input type="checkbox" id="checkedPedido" />
-            <span>Pedido</span>
-            </label>
-        </p>
+            ?>
 
-        </div>
-        <div class="col s6 m6 l3">
-        <p>
-          <label>
-            <input type="checkbox" id="checkedCita" />
-            <span>Cita</span>
-            </label>
-        </p>
-      </div>
-      <div class="col s6 m6 l3">
-        <p>
-          <label>
-            <input type="checkbox" id="checkedLogistica" />
-            <span>Logistica</span>
-            </label>
-        </p>
-      </div>
-      </div>
-</div>
+            <h4 style="text-align: center;"><?php echo $datos1['razonSocial']; ?></h4>
+           
 
-        <div class="input-field col s5 m5 l5">
-          <i class="material-icons prefix">search</i>
-          <input type="number" id="txtBuscar" class="autocomplete" >
-          <label for="autocomplete">Codigo de evento</label>
 
-        </div>
+<?php } ?> 
 
-      </div>
-         <div class="salida"></div>
-    </div>
-
-<!--Evento Cita-->
+<div class="row">
+      <div class="col s1 m1 l1"></div>
+      
+       <!--Evento Cita-->
 
 
                 <?php
                 
-          $queryCita = ("SELECT * FROM calendar");
+          $queryCita = ("SELECT * FROM calendar where idEmpresa=:idEmpresa");
           $buscarCita = $dbConn->prepare($queryCita);
+          $buscarCita->bindParam(':idEmpresa', $_SESSION['empresa'], PDO::PARAM_INT);
           $buscarCita->execute();
 
 
@@ -442,7 +514,7 @@ while ($registroCalendar=$buscarCita->fetch(PDO::FETCH_ASSOC)){
 
         while ($registroUsuario=$buscarUsuario2->fetch(PDO::FETCH_ASSOC)){
 
-      $queryObservacion1 = ("SELECT * FROM observaciones where idEvento=:idEvento");
+      $queryObservacion1 = ("SELECT * FROM observaciones where idEvento=:idEvento and tipoEvento=1");
       $buscarObservacion1 = $dbConn->prepare($queryObservacion1);
       $buscarObservacion1->bindParam(':idEvento', $registroCalendar['idRegistro'], PDO::PARAM_INT); 
       $buscarObservacion1->execute();
@@ -498,7 +570,7 @@ while ($registroCalendar=$buscarCita->fetch(PDO::FETCH_ASSOC)){
                       
                       <p>
                       <label>
-                        <input type="checkbox" <?php echo $checkedConfirmado; ?>  onclick="confirmarDesconfirmar(<?php echo $registroCalendar['idRegistro'].',this.checked';  ?>)" />
+                        <input type="checkbox" disabled <?php echo $checkedConfirmado; ?>  onclick="confirmarDesconfirmar(<?php echo $registroCalendar['idRegistro'].',this.checked';  ?>)"  />
                         <span>Confirmado :  <?php echo $registroCalendar['fechaConfirmar']; ?></span>
                       </label>
                     </p>
@@ -604,8 +676,9 @@ while ($registroCalendar=$buscarCita->fetch(PDO::FETCH_ASSOC)){
 
 <?php 
 
-$queryPerdido = ("SELECT * FROM pedido");
+$queryPerdido = ("SELECT * FROM pedido where idEmpresa=:idEmpresa");
 $buscarPedidos = $dbConn->prepare($queryPerdido);
+$buscarPedidos->bindParam(':idEmpresa', $_SESSION['empresa'], PDO::PARAM_INT);
 $buscarPedidos->execute();
 
 
@@ -654,7 +727,7 @@ while ($registroEmpresas=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
       while ($registroUsuario3=$buscarUsuario3->fetch(PDO::FETCH_ASSOC)){
 
 
-      $queryObservacion2 = ("SELECT * FROM observaciones where idEvento=:idEvento");
+      $queryObservacion2 = ("SELECT * FROM observaciones where idEvento=:idEvento and tipoEvento=2");
       $buscarObservacion2 = $dbConn->prepare($queryObservacion2);
       $buscarObservacion2->bindParam(':idEvento', $registroPedido['idRegistro'], PDO::PARAM_INT); 
       $buscarObservacion2->execute();
@@ -703,14 +776,14 @@ while ($registroEmpresas=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
 
                     <p>
                       <label>
-                        <input type="checkbox" <?php echo @$procesoPedido; ?> onclick="procesoDesproceso(<?php echo $registroPedido['idRegistro'].',this.checked'; ?>);" />
+                        <input type="checkbox" disabled <?php echo @$procesoPedido; ?> onclick="procesoDesproceso(<?php echo $registroPedido['idRegistro'].',this.checked'; ?>);" />
                         <span>En proceso <?php echo $registroPedido['fechaProceso']; ?></span>
                       </label>
                     </p>
                  
                     <p>
                       <label>
-                        <input type="checkbox"  <?php echo $completoPedido; ?> onclick="completoIncompleto(<?php echo $registroPedido['idRegistro'].',this.checked'; ?>);" />
+                        <input type="checkbox" disabled  <?php echo $completoPedido; ?> onclick="completoIncompleto(<?php echo $registroPedido['idRegistro'].',this.checked'; ?>);" />
                         <span>Finalizado <?php echo $registroPedido['fechaCompleto'] ?></span>
                       </label>
                     </p>
@@ -843,8 +916,9 @@ while ($registroEmpresas=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
 
 
 <?php 
-$queryLogistica = ("SELECT * FROM logistica");
+$queryLogistica = ("SELECT * FROM logistica where idEmpresa=:idEmpresa");
 $buscarLogistica = $dbConn->prepare($queryLogistica);
+$buscarLogistica->bindParam(':idEmpresa', $_SESSION['empresa'], PDO::PARAM_INT); 
 $buscarLogistica->execute();
 while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
 
@@ -864,7 +938,7 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
          while ($registroUsuario4=$buscarUsuario4->fetch(PDO::FETCH_ASSOC)){
 
 
-      $queryObservacion4 = ("SELECT * FROM observaciones where idEvento=:idEvento");
+      $queryObservacion4 = ("SELECT * FROM observaciones where idEvento=:idEvento and tipoEvento=3");
       $buscarObservacion4 = $dbConn->prepare($queryObservacion4);
       $buscarObservacion4->bindParam(':idEvento', $registroLogistica['idRegistro'], PDO::PARAM_INT); 
       $buscarObservacion4->execute();
@@ -935,13 +1009,13 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
                     </p>
                     <p>
                       <label>
-                        <input type="checkbox" <?php echo $procesoLogistica; ?> onclick="logisticaProceso(<?php echo $registroLogistica['idRegistro'].',this.checked'; ?>);" />
+                        <input type="checkbox" disabled <?php echo $procesoLogistica; ?> onclick="logisticaProceso(<?php echo $registroLogistica['idRegistro'].',this.checked'; ?>);" />
                         <span>En proceso <?php echo $registroLogistica['fechaProceso']; ?></span>
                       </label>
                     </p>
                     <p>
                       <label>
-                        <input type="checkbox" <?php echo $completadoLogistica; ?> onclick="logisticaCompleto(<?php echo $registroLogistica['idRegistro'].',this.checked'; ?>);" />
+                        <input type="checkbox" disabled <?php echo $completadoLogistica; ?> onclick="logisticaCompleto(<?php echo $registroLogistica['idRegistro'].',this.checked'; ?>);" />
                         <span>Finalizado  <?php echo $registroLogistica['fechaCompletado']; ?></span>
                       </label>
                     </p>
@@ -1063,18 +1137,14 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
           
 
 <?php }}} ?>
+      </div>    
+ </div> 
 
-          
-
-
-
-
-
-
+          <!--end container-->
         </section>
         <!-- END CONTENT -->
         <!-- START RIGHT SIDEBAR NAV-->
-       <aside id="right-sidebar-nav">
+        <aside id="right-sidebar-nav">
           <ul id="chat-out" class="side-nav rightside-navigation">
             <li class="li-hover">
               <div class="row">
@@ -1097,13 +1167,7 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
                 <div id="chatapp" class="col s12">
                   <h6 class="mt-5 mb-3 ml-3">REGISTRO LLAMADAS</h6>
                   <div id="registroLllamadasMostrar" class="collection border-none">
-                   <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color blue lighten-1">info_outline</i>
-                    </div>
-                    <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">No hay llamadas!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
-                    </div>
+                   
                     
                   </div>
                 </div>
@@ -1111,14 +1175,75 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
                   <h6 class="mt-5 mb-3 ml-3">EVENTOS RECIENTES</h6>
                   <div class="activity" id="registroEventos11">
                     <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">info_outline</i>
+                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">add_shopping_cart</i>
                     </div>
                     <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">Aun no hay eventos!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
+                      <a href="#" class="deep-purple-text medium-small">just now</a>
+                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jim Doe Purchased new equipments for zonal office.</p>
                     </div>
-                    
-
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color cyan lighten-2">airplanemode_active</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="cyan-text medium-small">Yesterday</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Your Next flight for USA will be on 15th August 2015.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
+                        <i class="material-icons white-text icon-bg-color green lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="green-text medium-small">5 Days Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color amber lighten-2">store</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="amber-text medium-small">1 Week Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list row">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color deep-orange lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="deep-orange-text medium-small">2 Week Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
+                        <i class="material-icons white-text icon-bg-color brown lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="brown-text medium-small">1 Month Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color deep-purple lighten-2">store</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="deep-purple-text medium-small">3 Month Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list row">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color grey lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="grey-text medium-small">1 Year Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1146,12 +1271,14 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
 
 <p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
 
+
     <script type="text/javascript">
-      
+
+
    //uri general para todos los procesos
     var uri1=$("#uriEnviar").text();
 
-         function mostrarRegistroLlamadas(){
+               function mostrarRegistroLlamadas(){
       var registroLlamadas= $.ajax({
         url: uri1+"controller/staticLateralIzquierdoC.php",
         dataType: "text",
@@ -1175,9 +1302,8 @@ while ($registroLogistica=$buscarLogistica->fetch(PDO::FETCH_ASSOC)){
 
     }
     setInterval(mostrarEventos,1000);
+    
 
-
-///funcion para insertar datos
 
 function chatObservacion(tipoEvento,txtEvento,idCliente,idEvento){
   
@@ -1207,65 +1333,6 @@ function chatObservacion(tipoEvento,txtEvento,idCliente,idEvento){
                             });
 
             }
-
-                        
-///funcion para busqueda
-
-
-      $("#txtBuscar").keyup(function(){
-
-       var pedido=$("#checkedPedido").prop('checked');
-       var logistica=$("#checkedLogistica").prop('checked');
-       var cita=$("#checkedCita").prop('checked');
-       var pedido1=0;
-       var logistica1=0;
-       var cita1=0;
-
-
-       if(pedido==true){
-        pedido1=1;
-       }
-
-      if(logistica==true){
-         logistica1=1;
-       }
-
-       if(cita==true){
-         cita1=1;
-       }
-
-       
-       //alert(pedido);
-       var text =$(this).val();
-
-        
-       //alert("pedido "+pedido1+" cita "+cita1+" logistica "+logistica1);
-        $.ajax({
-          data:{
-            "txtBuscar": text,
-            "txtPedido1": pedido1,
-            "txtCita1": cita1,
-            "txtLogistica1": logistica1
-          },
-          url: uri1+'controller/busquedaEventosC.php',
-          type: 'POST',
-          beforeSend: function(){ },
-          success: function (response){
-            $('.salida').html(response);
-
-          },
-          error: function(){
-            alert("error");
-          } 
-
-
-        });
-     
-
-
-      });
-
-
     </script>
     <!-- END FOOTER -->
     <!-- ================================================

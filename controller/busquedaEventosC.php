@@ -205,7 +205,7 @@ echo ' <div class="col s12 m12 l12">
       }elseif($usuarioComentario1R['idPrivilegios']==2){
         $avatarObservacion=  ' <img src="../img/personCallin.png" alt="Contact Person">';
 
-      }elseif($usuarioComentario1R['idPrivilegios']==3){
+      }elseif($usuarioComentario1R['idPrivilegios']>=3){
         $avatarObservacion= '<img src="../img/cliente.png" alt="Contact Person">';
 
       }
@@ -446,7 +446,7 @@ echo '<div class="col s12 m12 l12">
       }elseif($usuarioComentarioR4['idPrivilegios']==2){
         $avatarObservacion=  ' <img src="../img/personCallin.png" alt="Contact Person">';
 
-      }elseif($usuarioComentarioR4['idPrivilegios']==3){
+      }elseif($usuarioComentarioR4['idPrivilegios']>=3){
         $avatarObservacion= '<img src="../img/cliente.png" alt="Contact Person">';
 
       }
@@ -659,7 +659,7 @@ while ($registroCalendar=$buscarCita->fetch(PDO::FETCH_ASSOC)){
       }elseif($usuarioComentario['idPrivilegios']==2){
         $avatarObservacion=  ' <img src="../img/personCallin.png" alt="Contact Person">';
 
-      }elseif($usuarioComentario['idPrivilegios']==3){
+      }elseif($usuarioComentario['idPrivilegios']>=3){
         $avatarObservacion= '<img src="../img/cliente.png" alt="Contact Person">';
 
       }

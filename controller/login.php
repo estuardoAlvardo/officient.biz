@@ -86,8 +86,17 @@ switch ($_SESSION["privilegio"]) {
 		$_SESSION['privilegios']=1;
 		$_SESSION['archivos']=1;
 
+		$_SESSION['miEstadoCuenta']=2;
+		$_SESSION['misServicios']=2;
+		$_SESSION['miArchivo']=2;
+		$_SESSION['misEventos']=2;
+		$_SESSION['buzonOfficient']=2;
+		$_SESSION['registroLlamadas']=2;
+		$_SESSION['inicio']=2;
 
-		header("location:../masterOffice/panelControl.php");
+
+
+		header("https:officient.biz/masterOffice/panelControl.php");
 
 		break;
 
@@ -106,9 +115,50 @@ switch ($_SESSION["privilegio"]) {
 		$_SESSION['privilegios']=2;
 		$_SESSION['archivos']=1;
 
-		header("location:../masterOffice/panelControl.php");
+		$_SESSION['miEstadoCuenta']=2;
+		$_SESSION['misServicios']=2;
+		$_SESSION['miArchivo']=2;
+		$_SESSION['misEventos']=2;
+		$_SESSION['buzonOfficient']=2;
+		$_SESSION['registroLlamadas']=2;
+		$_SESSION['inicio']=2;
+
+
+		header("https:officient.biz/masterOffice/panelControl.php");
+		break;
+
+
+		case 5:
+		//asistenteVirtual
+		//opciones del panel=========  si puede ver== 1  no puede ver ===2
+
+		$_SESSION['dashboard']=2;
+		$_SESSION['reporteCliente']=2;
+		$_SESSION['ingresoFacturas']=2;
+		$_SESSION['ingresoExtras']=2;
+		$_SESSION['ingresoPago']=2;
+		$_SESSION['pendientesPago']=2;
+		$_SESSION['clienteyUsuarios']=2;
+		$_SESSION['empresas']=2;
+		$_SESSION['serviciosyPaquetes']=2;
+		$_SESSION['privilegios']=2;
+		$_SESSION['archivos']=2;
+		$_SESSION['miEstadoCuenta']=1;
+		$_SESSION['misServicios']=1;
+		$_SESSION['miArchivo']=1;
+		$_SESSION['misEventos']=1;
+		$_SESSION['buzonOfficient']=1;
+		$_SESSION['registroLlamadas']=1;
+		$_SESSION['inicio']=1;
+
+
+
+		header("https:officient.biz/masterOffice/panelControl.php");
+
+		
 		break;
 	
+
 	
 	
 	
@@ -121,7 +171,8 @@ switch ($_SESSION["privilegio"]) {
 
 }else{
 
-	header("location:../index.php");
+			header("https:officient.biz/masterOffice/panelControl.php");
+
 }
 // en la base de datos el tipo de usuario se toma como 1=alumno 2=profesor 3=coordinador
 

@@ -1,5 +1,14 @@
 <?php 
 session_start();
+include '../conexion/conexion.php';
+
+
+
+if($_SESSION['privilegio']==5){
+  $ocultarRegistros='display:none';
+}else{
+   $ocultarRegistros='';
+}
 
 
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
@@ -76,10 +85,55 @@ if ($_SESSION['archivos']==1) {
 	$archivos='display:none;';
 }
 
-
+if ($_SESSION['pendientesPago']==1) {
+  $pendientesPagos='display:block;';
+}else{
+  $pendientesPagos='display:none;';
+}
 
 //echo $dashboard;
+//links para clientes
 
+
+if ($_SESSION['miEstadoCuenta']==1) {
+  $miEstadoCuenta='display:block;';
+}else{
+  $miEstadoCuenta='display:none;';
+}
+
+if ($_SESSION['misServicios']==1) {
+  $misServicios='display:block;';
+}else{
+  $misServicios='display:none;';
+}
+
+if ($_SESSION['miArchivo']==1) {
+  $miArchivo='display:block;';
+}else{
+  $miArchivo='display:none;';
+}
+
+
+if ($_SESSION['misEventos']==1) {
+  $misEventos='display:block;';
+}else{
+  $misEventos='display:none;';
+}
+
+
+if ($_SESSION['inicio']==1) {
+  $inicio='display:block;';
+}else{
+  $inicio='display:none;';
+}
+
+
+
+
+$q1 = ("SELECT * FROM empresa where idempresa=:idempresa");
+      $buscarEmpresa = $dbConn->prepare($q1);
+      $buscarEmpresa->bindParam(':idempresa', $_SESSION['empresa'], PDO::PARAM_INT);
+      $buscarEmpresa->execute();
 
 
 ?>
@@ -167,7 +221,7 @@ if ($_SESSION['archivos']==1) {
             <ul class="left">
               <li>
                 <h1 class="logo-wrapper">
-                  <a href="panelControl.php" class="brand-logo darken-1" >
+                  <a href="panelCliente.php" class="brand-logo darken-1" >
                     <img src="../img/logo2.png" alt="materialize logo">
                     <span class="logo-text hide-on-med-and-down">Officient</span>
                   </a>
@@ -190,7 +244,7 @@ if ($_SESSION['archivos']==1) {
                 </a>
               </li>
               
-              <li>
+              <li style="<?php echo $ocultarRegistros; ?> ">
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
                 </a>
@@ -365,6 +419,57 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   </a>
                 </li>
 
+
+                  <li class="bold" style="<?php echo $inicio; ?>">
+                  <a href="panelCliente.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">home</i>
+                    <span class="nav-text">Inicio</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $miEstadoCuenta; ?>">
+                  <a href="estadoCuenta.php?user=<?php echo $_SESSION['empresa']; ?>&acount=<?php echo $_SESSION['nombreEmpresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">pie_chart</i>
+                    <span class="nav-text">Estado de cuenta</span>
+                  </a>
+                </li>
+
+               <li class="bold" style="<?php echo $misServicios; ?>">
+                  <a href="misServicios.php?user=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">loyalty</i>
+                    <span class="nav-text">Mis Servicios</span>
+                  </a>
+                </li>
+
+                <li class="bold" style="<?php echo $miArchivo; ?>">
+                  <a href="miArchivo.php?user=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">unarchive</i>
+                    <span class="nav-text">Mi Archivo</span>
+                  </a>
+                </li>
+
+                <li class="bold" style="<?php echo $misEventos; ?>">
+                  <a href="misEventos.php?use=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">event</i>
+                    <span class="nav-text">Mis Eventos</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $buzonOfficient; ?>">
+                  <a href="estadoCuenta.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">markunread_mailbox</i>
+                    <span class="nav-text">Mi buzon de recepción</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $registroLlamadas; ?>">
+                  <a href="miRegistroLlamadas.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">call</i>
+                    <span class="nav-text">RegistroLlamadas</span>
+                  </a>
+                </li>
+
+
               </ul>
             </li>
           </ul>
@@ -378,16 +483,357 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         <section id="content">
           <!--start container-->
           <div class="container">
-            <!--card stats start-->
+           <?php 
+             while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
+              $_SESSION['nombreEmpresa']=$datos1['razonSocial'];
+
+            ?>
+
+            <h4 style="text-align: center;"><?php echo $datos1['razonSocial']; ?></h4>
+            <?php } ?>
+
+            <div class="row">
+             <div class="col s12 m3">
+               <div class="card gradient-shadow grey lighten-3 border-radius-3 animate fadeUp">
+                  <div class="card-content center">
+                       <a class="btn-floating btn-large waves-effect indigo darken-4 modal-trigger" href="#modal1" onclick="coordinarPaqueteBuzon();"><i class="material-icons">markunread_mailbox</i></a>
+
+                     <h5 class="black-text lighten-4" >Coordinar</h5>
+                     <p class="black-text lighten-4">un paquete para recepción</p>
+                  </div>
+               </div>
+            </div>
+
+            <div class="col s12 m3">
+               <div class="card gradient-shadow grey lighten-3 border-radius-3 animate fadeUp">
+                  <div class="card-content center">
+                       <a class="btn-floating btn-large waves-effect indigo darken-4 modal-trigger" href="#modal2" onclick="coordinarCalendarEvent();"><i class="material-icons">event</i></a>
+
+                     <h5 class="black-text lighten-4" >Solicitar</h5>
+                     <p class="black-text lighten-4">Sala de reunión</p>
+                  </div>
+               </div>
+            </div>
+
+            <div class="col s12 m3">
+               <div class="card gradient-shadow grey lighten-3 border-radius-3 animate fadeUp">
+                  <div class="card-content center">
+                       <a class="btn-floating btn-large waves-effect indigo darken-4 modal-trigger" href="#modal3" onclick="coordinarPedido();"><i class="material-icons">archive</i></a>
+
+                     <h5 class="black-text lighten-4" >Coordinar</h5>
+                     <p class="black-text lighten-4">Un pedido</p>
+                  </div>
+               </div>
+            </div>
+
+              <div class="col s12 m3">
+               <div class="card gradient-shadow grey lighten-3 border-radius-3 animate fadeUp">
+                  <div class="card-content center">
+                       <a class="btn-floating btn-large waves-effect indigo darken-4 modal-trigger" href="#modal4" onclick="coordinarLogistica();" ><i class="material-icons" >motorcycle</i></a>
+
+                     <h5 class="black-text lighten-4" >Coordinar</h5>
+                     <p class="black-text lighten-4">Logistica</p>
+                  </div>
+               </div>
+            </div>
+
+              <div class="col s12 m12 l12">
+               <div class="card gradient-shadow gradient-45deg-blue-grey-blue border-radius-3 animate fadeUp">
+                  <div class="card-content center">
+                       <a class="btn-floating btn-small waves-effect indigo darken-4 modal-trigger" href="#modal4" onclick="coordinarLogistica();" ><i class="material-icons" >notifications</i></a>
+
+                     <h5 class="white-text lighten-4">Tus eventos son guardados en Mis eventos!</h5>
+                     <p class="black-text lighten-4"></p>
+                  </div>
+               </div>
+              
+            </div>
+
            
-            
-            <!--card widgets end-->
-            
-            <!--work collections start-->
-            
-            <!--work collections end-->
-            
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+            <!-- Modal para insertar inicio MODAL 1 -->
+                      <div id="modal1" class="modal">
+                        <div class="modal-content">
+                          <div class="col s12 m12 l12">
+                            <h5>Coordinar paquete para recepción </h5>
+                            <p class="chip indigo darken-4" style="color: white;">Para asignar la factua a un cliente debes conocer el codigo del cliente.</p>
+                             <p class="chip indigo darken-4" style="color: white;">Para reasignar una factura a otro mes debes colocar el codigo del mes.</p><br>
+                        <form id="actualizarFactura" >
+                          <input type="text" name="eventoEjecutar" id="eventoEjecutar" value="3" style="display: none;">
+                           <div class="row">
+                             <div class="input-field col s12 m12 l12 ">
+                              <input id="txtNoFactura" name="txtNoFactura" type="text" autofocus >
+                              <label for="first_name">No# Factura</label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtFechaFactura" name="txtFechaFactura" type="text" autofocus disabled>
+                              <label for="first_name">Fecha Factura</label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtNombreCliente" name="txtNombreCliente" type="text" autofocus disabled>
+                              <label for="first_name">Nombre Cliente</label>
+                            </div>
+                          </div>
+
+                           <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtCodigoCliente" name="txtCodigoCliente" type="text" autofocus>
+                              <label for="first_name">Codigo Cliente</label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtNit" name="txtNit" type="text" autofocus disabled>
+                              <label for="first_name">Nit</label>
+                            </div>
+                          </div>
+                          
+
+                           <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtMontoFactura" name="txtMontoFactura" type="text" autofocus disabled>
+                              <label for="first_name">Monto Factura</label>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12 ">
+                              <input id="txtCodigoMes" name="txtCodigoMes" type="number" autofocus>
+                              <label for="first_name">Codigo Mes</label>
+                            </div>
+                          </div>
+                           
+                           
+
+
+                          <div class="row">
+                            <div class="row">
+                              <div class="input-field col s8 m8 l8 left">
+                                <a class="modal-close btn waves-effect  indigo darken-4 right" onclick="insertarDatos11();">Guardar
+                                  <i class="material-icons right">send</i>
+                                </a>
+                              </div>
+                              <div class="col s1 m1 l1"></div>
+                              <div class="input-field col s3 m3 l3">
+                                <a href="#!" class="modal-close btn waves-effect waves-light right">Cerra
+                                  <i class="material-icons right">close</i>
+                                </a>
+                               
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+
+
+
+                  </div>
+                </div>
+              </div>
+             <!-- Modal para insertar fin  -->
+                
+
+
+            <!-- Modal para insertar inicio MODAL 2 -->
+                      <div id="modal2" class="modal">
+                        <div class="modal-content">
+                          <div class="col s12 m12 l12">
+                            <h5>Solicitar Sala de reuniones </h5>
+                            
+                       <form id="formularioCita">
+                            <input type="text" name="textIdEmpresa" id="textIdEmpresa" value="<?php echo $_SESSION['empresa']; ?>" style="display: none;">
+                            <input type="text" name="txtIdUsuario" value="<?php echo $_SESSION['idCliente']; ?>" style="display: none;">
+                            <input type="text" name="accionEjecutar" id="accionEjecutar" value="3" style="display: none;">
+                            <input type="text" name="tipoLlamada" id="tipoLlamada" value="5" style="display: none;">
+                             <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtTituloEvento" type="text" name="txtTituloEvento">
+                                <label for="first_name">Motivo Reunión</label>
+                              </div>
+                            </div>
+                             <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtDescripcionEvento" type="text" name="txtDescripcionEvento">
+                                <label for="first_name">Descripción Evento</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <p>Inicio Evento</p>
+                                <input id="name" name="txtIncioEvento" type="datetime-local" autofocus>
+                                <label for="first_name"></label>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <p>Finaliza Evento</p>
+                                <input id="txtFinalEvento" type="datetime-local" name="txtFinalEvento" autofocus>
+                                <label for="first_name"></label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <a class="btn waves-effect waves-light right"   onclick="registrarCita();">Agendar cita
+                                  <i class="material-icons right">send</i>
+                                </a>
+                              </div>
+                            </div>
+                             
+                           </form>
+
+
+
+                  </div>
+                </div>
+              </div>
+             <!-- Modal para insertar fin  -->
+
+
+
+            <!-- Modal para insertar inicio MODAL 3 -->
+                      <div id="modal3" class="modal">
+                        <div class="modal-content">
+                          <div class="col s12 m12 l12">
+                            <h5>Coordinar un pedido </h5>
+                           <form name="formularioPedido" id="formularioPedido">
+                            <input type="text" name="textIdEmpresa" id="textIdEmpresa1" value="<?php echo $_SESSION['empresa']; ?>" style="display: none;">
+                            <input type="text" name="txtIdUsuario" value="<?php echo $_SESSION['idCliente']; ?>" style="display: none;">
+                            <input type="text" name="accionEjecutar" id="accionEjecutar" value="2" style="display: none;">
+                            <input type="text" name="tipoLlamada" id="tipoLlamada" value="3" style="display: none;">
+
+                           <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtDireccionEntrega" name="txtDireccionEntrega" type="text">
+                                <label for="first_name">Dirección de entrega</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtContactoEntrega" name="txtContactoEntrega" type="text">
+                                <label for="first_name">Contacto de entrega</label>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtNombreFactura" name="txtNombreFactura" type="text">
+                                <label for="first_name">Nombre Factura</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtNit" name="txtNit" type="text">
+                                <label for="first_name">Nit</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtPedido" name="txtPedido" type="text">
+                                <label for="first_name">Pedido</label>
+                              </div>
+                            </div>
+                           <div class="row">
+                            <div class="input-field col s12">
+                              <textarea id="txtDetalle" name="txtDetalle" class="materialize-textarea"></textarea>
+                              <label for="message">Detalle</label>
+                            </div>
+                          </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <a class="btn waves-effect waves-light right" type="submit" name="action" onclick="registrarPedido();">Crear Pedido <i class="material-icons right">send</i>
+                                </a>
+                              </div>
+                            </div>
+                         </form>
+
+
+
+                  </div>
+                </div>
+              </div>
+             <!-- Modal para insertar fin  -->
+
+
+
+            <!-- Modal para insertar inicio MODAL 4 -->
+                      <div id="modal4" class="modal">
+                        <div class="modal-content">
+                          <div class="col s12 m12 l12">
+                            <h5>Coordinar Logistica </h5>
+                           
+                       <form id="formularioLogistica" name="formularioLogistica">
+                              <input type="text" name="textIdEmpresa" id="textIdEmpresa2" value="<?php echo $_SESSION['empresa']; ?>" style="display: none;">
+                            <input type="text" name="txtIdUsuario" value="<?php echo $_SESSION['idCliente']; ?>" style="display: none;">
+                            <input type="text" name="accionEjecutar" id="accionEjecutar" value="4" style="display: none;">
+                            <input type="text" name="tipoLlamada" id="tipoLlamada" value="5" style="display: none;">
+                             <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtDireccionRecoleccion" type="text" name="txtDireccionRecoleccion">
+                                <label for="first_name">Direcciónn de recolección</label>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtContactoRecoleccion" type="text" name="txtContactoRecoleccion">
+                                <label for="first_name">Contacto recolección</label>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtHorario" type="time" name="txtHorario">
+                                <label for="first_name">Horario</label>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtDireccionEntrega" type="text" name="txtDireccionEntrega">
+                                <label for="first_name">Direcciónn de entrega</label>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <input id="txtContactoEntrega" type="text" name="txtContactoEntrega">
+                                <label for="first_name">Contacto de entrega</label>
+                              </div>
+                            </div>
+
+
+                            <div class="row">
+                            <div class="input-field col s12">
+                              <textarea id="txtDetalle" class="materialize-textarea" name="txtDetalle"></textarea>
+                              <label for="message">Detalle</label>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12">
+                                <a class="btn waves-effect waves-light right" onclick="registrarLogistica();">Crear Mensaje
+                                  <i class="material-icons right">send</i>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                          </form>  
+
+
+
+                  </div>
+                </div>
+              </div>
+             <!-- Modal para insertar fin  -->
+
+            </div>         
           </div>
           <!--end container-->
         </section>
@@ -552,6 +998,97 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
     }
     setInterval(mostrarEventos,1000);
     
+
+
+function coordinarPaqueteBuzon(){
+
+  //alert('coordinando paquete buzon');
+  $("#modal1").modal();
+
+}
+
+
+function coordinarCalendarEvent(){
+  //alert('coordinar calendar');
+  $("#modal2").modal();
+}
+
+function coordinarPedido(){
+  //alert('coordinar Perdido');
+  $("#modal3").modal();
+}
+
+
+function coordinarLogistica(){
+  //alert('coordinar Logisitica');
+  $("#modal4").modal();
+}
+
+
+
+
+function registrarCita(){
+   var datosGuardar= $("#formularioCita").serialize();
+alert(datosGuardar);
+      
+
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Cita Agendada! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+
+}
+
+
+
+function registrarPedido(){
+
+  var datosGuardar= $("#formularioPedido").serialize();
+  alert(datosGuardar);
+   $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Pedido creado de manera correcta! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+}
+
+
+function registrarLogistica(){
+     var datosGuardar= $("#formularioLogistica").serialize();
+
+     //alert(datosGuardar);
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Se genero evento de logistica!! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+}
+
 
     </script>
     <!-- END FOOTER -->

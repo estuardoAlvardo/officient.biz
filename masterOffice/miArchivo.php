@@ -3,6 +3,15 @@ session_start();
 
 include '../conexion/conexion.php';
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
+
+
+if($_SESSION['privilegio']==5){
+  $ocultarRegistros='display:none';
+}else{
+   $ocultarRegistros='';
+}
+
+
 if ($_SESSION['dashboard']==1) {
 	$dasboard='display:block;';
 }elseif($_SESSION['dashboard']==2){
@@ -76,11 +85,59 @@ if ($_SESSION['archivos']==1) {
 	$archivos='display:none;';
 }
 
-
+if ($_SESSION['pendientesPago']==1) {
+  $pendientesPagos='display:block;';
+}else{
+  $pendientesPagos='display:none;';
+}
 
 //echo $dashboard;
+//links para clientes
 
 
+if ($_SESSION['miEstadoCuenta']==1) {
+  $miEstadoCuenta='display:block;';
+}else{
+  $miEstadoCuenta='display:none;';
+}
+
+if ($_SESSION['misServicios']==1) {
+  $misServicios='display:block;';
+}else{
+  $misServicios='display:none;';
+}
+
+if ($_SESSION['miArchivo']==1) {
+  $miArchivo='display:block;';
+}else{
+  $miArchivo='display:none;';
+}
+
+
+if ($_SESSION['misEventos']==1) {
+  $misEventos='display:block;';
+}else{
+  $misEventos='display:none;';
+}
+
+if ($_SESSION['inicio']==1) {
+  $inicio='display:block;';
+}else{
+  $inicio='display:none;';
+}
+
+
+if ($_SESSION['buzonOfficient']==1) {
+  $buzonOfficient='display:block;';
+}else{
+  $buzonOfficient='display:none;';
+}
+
+if ($_SESSION['registroLlamadas']==1) {
+  $registroLlamadas='display:block;';
+}else{
+  $registroLlamadas='display:none;';
+}
 
 ?>
 
@@ -167,7 +224,7 @@ if ($_SESSION['archivos']==1) {
             <ul class="left">
               <li>
                 <h1 class="logo-wrapper">
-                  <a href="panelControl.php" class="brand-logo darken-1" >
+                  <a href="<?php echo $redireccionIndex; ?>" class="brand-logo darken-1" >
                     <img src="../img/logo2.png" alt="materialize logo">
                     <span class="logo-text hide-on-med-and-down">Officient</span>
                   </a>
@@ -189,15 +246,8 @@ if ($_SESSION['archivos']==1) {
                   </i>
                 </a>
               </li>
-              <li>
-                <a href="javascript:void(0);" class="waves-effect waves-block waves-light profile-button" data-activates="profile-dropdown">
-                  <span class="avatar-status avatar-online">
-                    <img src="../img/avatar/avatar-7.png" alt="avatar">
-                    <i></i>
-                  </span>
-                </a>
-              </li>
-              <li>
+              
+              <li style="<?php echo $ocultarRegistros; ?> ">
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
                 </a>
@@ -288,25 +338,13 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                 <div class="col col s8 m8 l8">
                   <ul id="profile-dropdown-nav" class="dropdown-content">
                     <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">face</i> Profile</a>
+                      <a href="perfil.php" class="grey-text text-darken-1">
+                        <i class="material-icons">face</i> Perfil</a>
                     </li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">settings</i> Settings</a>
-                    </li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">live_help</i> Help</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="#" class="grey-text text-darken-1">
-                        <i class="material-icons">lock_outline</i> Lock</a>
-                    </li>
+                    
                     <li>
                       <a href="../controller/logout.php" class="grey-text text-darken-1">
-                        <i class="material-icons">keyboard_tab</i> Logout</a>
+                        <i class="material-icons">keyboard_tab</i> Salir</a>
                     </li>
                   </ul>
                   <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown-nav"><?php echo $_SESSION['nombre'].' '.$_SESSION['apellido']; ?><i class="mdi-navigation-arrow-drop-down right"></i></a>
@@ -384,6 +422,56 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   </a>
                 </li>
 
+              <li class="bold" style="<?php echo $inicio; ?>">
+                  <a href="panelCliente.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">home</i>
+                    <span class="nav-text">Inicio</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $miEstadoCuenta; ?>">
+                  <a href="estadoCuenta.php?user=<?php echo $_SESSION['empresa']; ?>&acount=<?php echo $_SESSION['nombreEmpresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">pie_chart</i>
+                    <span class="nav-text">Estado de cuenta</span>
+                  </a>
+                </li>
+
+               <li class="bold" style="<?php echo $misServicios; ?>">
+                  <a href="misServicios.php?user=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">loyalty</i>
+                    <span class="nav-text">Mis Servicios</span>
+                  </a>
+                </li>
+
+                <li class="bold" style="<?php echo $miArchivo; ?>">
+                  <a href="miArchivo.php?user=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">unarchive</i>
+                    <span class="nav-text">Mi Archivo</span>
+                  </a>
+                </li>
+
+                <li class="bold" style="<?php echo $misEventos; ?>">
+                  <a href="misEventos.php?use=<?php echo $_SESSION['empresa']; ?>" class="waves-effect waves-cyan">
+                    <i class="material-icons">event</i>
+                    <span class="nav-text">Mis Eventos</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $buzonOfficient; ?>">
+                  <a href="estadoCuenta.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">markunread_mailbox</i>
+                    <span class="nav-text">Mi buzon de recepción</span>
+                  </a>
+                </li>
+
+                  <li class="bold" style="<?php echo $registroLlamadas; ?>">
+                  <a href="miRegistroLlamadas.php" class="waves-effect waves-cyan">
+                    <i class="material-icons">call</i>
+                    <span class="nav-text">RegistroLlamadas</span>
+                  </a>
+                </li>
+
+
               </ul>
             </li>
           </ul>
@@ -423,7 +511,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
 
 <table class="card">
         <thead>
-          <th colspan="3" style="text-align: center;">Mi Archivo (Registro de documentos que se tienen en fisico)</th>
+          <th colspan="5" style="text-align: center;">Mi Archivo (Registro de documentos que se tienen en fisico)</th>
           <tr>
 
               <th></th>
@@ -465,7 +553,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
         </section>
         <!-- END CONTENT -->
         <!-- START RIGHT SIDEBAR NAV-->
-        <aside id="right-sidebar-nav">
+     <aside id="right-sidebar-nav">
           <ul id="chat-out" class="side-nav rightside-navigation">
             <li class="li-hover">
               <div class="row">
@@ -478,254 +566,38 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                     </li>
                     <li class="tab col s4">
                       <a href="#chatapp">
-                        <span class="material-icons">face</span>
+                        <span class="material-icons">call</span>
                       </a>
                     </li>
-                    <li class="tab col s4">
-                      <a href="#settings">
-                        <span class="material-icons">settings</span>
-                      </a>
-                    </li>
+
                   </ul>
                 </div>
-                <div id="settings" class="col s12">
-                  <h6 class="mt-5 mb-3 ml-3">GENERAL SETTINGS</h6>
-                  <ul class="collection border-none">
-                    <li class="collection-item border-none">
-                      <div class="m-0">
-                        <span class="font-weight-600">Notifications</span>
-                        <div class="switch right">
-                          <label>
-                            <input checked type="checkbox">
-                            <span class="lever"></span>
-                          </label>
-                        </div>
-                      </div>
-                      <p>Use checkboxes when looking for yes or no answers.</p>
-                    </li>
-                    <li class="collection-item border-none">
-                      <div class="m-0">
-                        <span class="font-weight-600">Show recent activity</span>
-                        <div class="switch right">
-                          <label>
-                            <input checked type="checkbox">
-                            <span class="lever"></span>
-                          </label>
-                        </div>
-                      </div>
-                      <p>The for attribute is necessary to bind our custom checkbox with the input.</p>
-                    </li>
-                    <li class="collection-item border-none">
-                      <div class="m-0">
-                        <span class="font-weight-600">Notifications</span>
-                        <div class="switch right">
-                          <label>
-                            <input type="checkbox">
-                            <span class="lever"></span>
-                          </label>
-                        </div>
-                      </div>
-                      <p>Use checkboxes when looking for yes or no answers.</p>
-                    </li>
-                    <li class="collection-item border-none">
-                      <div class="m-0">
-                        <span class="font-weight-600">Show recent activity</span>
-                        <div class="switch right">
-                          <label>
-                            <input type="checkbox">
-                            <span class="lever"></span>
-                          </label>
-                        </div>
-                      </div>
-                      <p>The for attribute is necessary to bind our custom checkbox with the input.</p>
-                    </li>
-                    <li class="collection-item border-none">
-                      <div class="m-0">
-                        <span class="font-weight-600">Show your emails</span>
-                        <div class="switch right">
-                          <label>
-                            <input type="checkbox">
-                            <span class="lever"></span>
-                          </label>
-                        </div>
-                      </div>
-                      <p>Use checkboxes when looking for yes or no answers.</p>
-                    </li>
-                    <li class="collection-item border-none">
-                      <div class="m-0">
-                        <span class="font-weight-600">Show Task statistics</span>
-                        <div class="switch right">
-                          <label>
-                            <input type="checkbox">
-                            <span class="lever"></span>
-                          </label>
-                        </div>
-                      </div>
-                      <p>The for attribute is necessary to bind our custom checkbox with the input.</p>
-                    </li>
-                  </ul>
-                </div>
+                
                 <div id="chatapp" class="col s12">
-                  <div class="collection border-none">
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-1.png" alt="" class="circle cyan">
-                      <span class="line-height-0">Elizabeth Elliott </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">5.00 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Thank you </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-2.png" alt="" class="circle deep-orange accent-2">
-                      <span class="line-height-0">Mary Adams </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">4.14 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Hello Boo </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-3.png" alt="" class="circle teal accent-4">
-                      <span class="line-height-0">Caleb Richards </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">9.00 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Keny ! </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-4.png" alt="" class="circle cyan">
-                      <span class="line-height-0">June Lane </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">4.14 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Ohh God </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-5.png" alt="" class="circle red accent-2">
-                      <span class="line-height-0">Edward Fletcher </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">5.15 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Love you </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-6.png" alt="" class="circle deep-orange accent-2">
-                      <span class="line-height-0">Crystal Bates </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">8.00 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Can we </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-7.png" alt="" class="circle cyan">
-                      <span class="line-height-0">Nathan Watts </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">9.53 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Great! </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-8.png" alt="" class="circle red accent-2">
-                      <span class="line-height-0">Willard Wood </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">4.20 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Do it </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-9.png" alt="" class="circle teal accent-4">
-                      <span class="line-height-0">Ronnie Ellis </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">5.30 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Got that </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-1.png" alt="" class="circle cyan">
-                      <span class="line-height-0">Gwendolyn Wood </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">4.34 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Like you </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-2.png" alt="" class="circle red accent-2">
-                      <span class="line-height-0">Daniel Russell </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">12.00 AM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Thank you </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-3.png" alt="" class="circle teal accent-4">
-                      <span class="line-height-0">Sarah Graves </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">11.14 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Okay you </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-4.png" alt="" class="circle red accent-2">
-                      <span class="line-height-0">Andrew Hoffman </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">7.30 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Can do </p>
-                    </a>
-                    <a href="#!" class="collection-item avatar border-none">
-                      <img src="images/avatar/avatar-5.png" alt="" class="circle cyan">
-                      <span class="line-height-0">Camila Lynch </span>
-                      <span class="medium-small right blue-grey-text text-lighten-3">2.00 PM</span>
-                      <p class="medium-small blue-grey-text text-lighten-3">Leave it </p>
-                    </a>
+                  <h6 class="mt-5 mb-3 ml-3">REGISTRO LLAMADAS</h6>
+                  <div id="registroLllamadasMostrar" class="collection border-none">
+                   <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                      <i class="material-icons white-text icon-bg-color blue lighten-1">info_outline</i>
+                    </div>
+                    <div class="col s9 recent-activity-list-text">
+                      <a href="#" class="deep-purple-text medium-small">No hay llamadas!</a>
+                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
+                    </div>
+                    
                   </div>
                 </div>
                 <div id="activity" class="col s12">
-                  <h6 class="mt-5 mb-3 ml-3">RECENT ACTIVITY</h6>
-                  <div class="activity">
+                  <h6 class="mt-5 mb-3 ml-3">EVENTOS RECIENTES</h6>
+                  <div class="activity" id="registroEventos11">
                     <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">add_shopping_cart</i>
+                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">info_outline</i>
                     </div>
                     <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">just now</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jim Doe Purchased new equipments for zonal office.</p>
+                      <a href="#" class="deep-purple-text medium-small">Aun no hay eventos!</a>
+                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
                     </div>
-                    <div class="recent-activity-list chat-out-list row mb-0">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                        <i class="material-icons white-text icon-bg-color cyan lighten-2">airplanemode_active</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="cyan-text medium-small">Yesterday</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Your Next flight for USA will be on 15th August 2015.</p>
-                      </div>
-                    </div>
-                    <div class="recent-activity-list chat-out-list row mb-0">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
-                        <i class="material-icons white-text icon-bg-color green lighten-2">settings_voice</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="green-text medium-small">5 Days Ago</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
-                      </div>
-                    </div>
-                    <div class="recent-activity-list chat-out-list row mb-0">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                        <i class="material-icons white-text icon-bg-color amber lighten-2">store</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="amber-text medium-small">1 Week Ago</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
-                      </div>
-                    </div>
-                    <div class="recent-activity-list row">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                        <i class="material-icons white-text icon-bg-color deep-orange lighten-2">settings_voice</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="deep-orange-text medium-small">2 Week Ago</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
-                      </div>
-                    </div>
-                    <div class="recent-activity-list chat-out-list row mb-0">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
-                        <i class="material-icons white-text icon-bg-color brown lighten-2">settings_voice</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="brown-text medium-small">1 Month Ago</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
-                      </div>
-                    </div>
-                    <div class="recent-activity-list chat-out-list row mb-0">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                        <i class="material-icons white-text icon-bg-color deep-purple lighten-2">store</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="deep-purple-text medium-small">3 Month Ago</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
-                      </div>
-                    </div>
-                    <div class="recent-activity-list row">
-                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                        <i class="material-icons white-text icon-bg-color grey lighten-2">settings_voice</i>
-                      </div>
-                      <div class="col s9 recent-activity-list-text">
-                        <a href="#" class="grey-text medium-small">1 Year Ago</a>
-                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
-                      </div>
-                    </div>
+                    
+
                   </div>
                 </div>
               </div>
@@ -750,6 +622,122 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
           </div>
         </div>
     </footer>
+
+
+
+<p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
+
+
+    <script type="text/javascript">
+      
+      var uri1=$("#uriEnviar").text();
+      
+      //funcion para guardar registro Llamadas
+
+function crearRegistro(){
+
+    var datosGuardar= $("#formularioRegistro").serialize();
+      //alert(datosGuardar);
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Llamada registrada :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+}
+
+
+function registrarPedido(){
+
+  var datosGuardar= $("#formularioPedido").serialize();
+
+   $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Pedido creado de manera correcta! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+}
+
+function registrarCita(){
+   var datosGuardar= $("#formularioCita").serialize();
+
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Cita Agendada! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+
+}
+
+function registrarLogistica(){
+     var datosGuardar= $("#formularioLogistica").serialize();
+
+     //alert(datosGuardar);
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/registroLlamadasC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Se genero evento de logistica!! :)', classes: 'rounded'});
+            
+        }
+
+      });
+
+
+}
+
+
+ function mostrarRegistroLlamadas(){
+      var registroLlamadas= $.ajax({
+        url: uri1+"controller/staticLateralIzquierdoC.php",
+        dataType: "text",
+        async: false
+
+      }).responseText;
+      document.getElementById('registroLllamadasMostrar').innerHTML = registroLlamadas;
+
+    }
+    setInterval(mostrarRegistroLlamadas,1000);
+
+
+ function mostrarEventos(){
+      var registroEventos= $.ajax({
+        url: uri1+"controller/staticLateralDerechoEventoC.php",
+        dataType: "text",
+        async: false
+
+      }).responseText;
+      document.getElementById('registroEventos11').innerHTML = registroEventos;
+
+    }
+    setInterval(mostrarEventos,1000);
+
+     
+    </script>
     <!-- END FOOTER -->
     <!-- ================================================
     Scripts

@@ -1,41 +1,5 @@
 <?php 
 session_start();
-
-
-date_default_timezone_set('America/Guatemala');
-$fecha_actual=date("d/m/Y");
-$hora_actual=date('H:i:s',time());
-$fechaCompleto=$fecha_actual.' '.$hora_actual;
-
-
-
-//redireccionar index
-
-if($_SESSION['privilegio']==5){
-
-  $redireccionIndex='panelCliente.php';
-
-}else{
-  $redireccionIndex='panelControl.php';
-}
-
-
-if($_SESSION['privilegio']==5){
-  $ocultarRegistros='display:none';
-}else{
-   $ocultarRegistros='';
-}
-//crear el codigo del mes de manera dinamica sin que intervencion humana
-
-
-$mesActual = date('m');
-$anoActual = date('y');
-
-
-
-$datoBuscar=$anoActual.$mesActual;
-
-
 include '../conexion/conexion.php';
 
 //validacion para mostrar opciones en el panel si la validacion ==1 entonces se vera de lo contrario se ocultara
@@ -120,6 +84,8 @@ if ($_SESSION['pendientesPago']==1) {
 }
 
 //echo $dashboard;
+
+//echo $dashboard;
 //links para clientes
 
 
@@ -149,112 +115,12 @@ if ($_SESSION['misEventos']==1) {
 }
 
 
-if ($_SESSION['inicio']==1) {
-  $inicio='display:block;';
-}else{
-  $inicio='display:none;';
-}
-
-
-if ($_SESSION['buzonOfficient']==1) {
-  $buzonOfficient='display:block;';
-}else{
-  $buzonOfficient='display:none;';
-}
-
-if ($_SESSION['registroLlamadas']==1) {
-  $registroLlamadas='display:block;';
-}else{
-  $registroLlamadas='display:none;';
-}
-
-
-switch ($mesActual) {
-  case 1:
-
-    $mesMostrar='Enero';
-
-
-    break;
-
-  case 2:
-
-    $mesMostrar='Febrero';
-
-
-  break;
-    
-  case 3:
-    
-   $mesMostrar='Marzo';
-
-  break;
-
-  case 4:
-    $mesMostrar='Abril';
-
-  break;
-
-  case 5:
-
-    $mesMostrar='Mayo';
-
-  break;
-  
-  case 6:
-    $mesMostrar='Junio';
-
-
-  break;
-
-  case 7:
-  $mesMostrar='Julio';
-
-  break;
-
-  case 8:
-
-  $mesMostrar='Agosto';
-
-  break;
-  
-  case 9:
-  $mesMostrar='Septiembre';
-
-
-  break;
-  
-  case 10:
-  $mesMostrar='Octubre';
-
-  break;
-  
-
-  case 11:
-  $mesMostrar='Noviembre';
-
-  break;
-  
-  case 12:
-
-  $mesMostrar='Diciembre';
-
-  break;
-  
-
-  default:
-$mesMostrar='No hay mes';
-
-    break;
-}
-
-
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Estado de cuenta <?php echo $_GET['acount']; ?> - www.officient.biz/asistenteVirtual</title>
+	<title>Master Editar Perfil - <?php echo $_SESSION['nombre']; ?></title>
 	<link  rel="icon"   href="../img/logo.ico" type="image/ico" />
 	    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -334,7 +200,7 @@ $mesMostrar='No hay mes';
             <ul class="left">
               <li>
                 <h1 class="logo-wrapper">
-                  <a href="<?php echo $redireccionIndex; ?>" class="brand-logo darken-1" >
+                  <a href="panelControl.php" class="brand-logo darken-1" >
                     <img src="../img/logo2.png" alt="materialize logo">
                     <span class="logo-text hide-on-med-and-down">Officient</span>
                   </a>
@@ -357,7 +223,7 @@ $mesMostrar='No hay mes';
                 </a>
               </li>
               
-              <li style="<?php echo $ocultarRegistros; ?> ">
+              <li>
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
                 </a>
@@ -432,7 +298,10 @@ $mesMostrar='No hay mes';
     <!-- //////////////////////////////////////////////////////////////////////////// -->
     <!-- START MAIN -->
     <div id="main">
-              <aside id="left-sidebar-nav">
+      <!-- START WRAPPER -->
+      <div class="wrapper">
+        <!-- START LEFT SIDEBAR NAV-->
+        <aside id="left-sidebar-nav">
           <ul id="slide-out" class="side-nav fixed leftside-navigation">
             <li class="user-details darken-2" style="background: #0f0c29;  /* fallback for old browsers */
 background: -webkit-linear-gradient(to left, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
@@ -448,7 +317,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                       <a href="perfil.php" class="grey-text text-darken-1">
                         <i class="material-icons">face</i> Perfil</a>
                     </li>
-                   
+                  
                     <li>
                       <a href="../controller/logout.php" class="grey-text text-darken-1">
                         <i class="material-icons">keyboard_tab</i> Salir</a>
@@ -586,9 +455,126 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
             <i class="material-icons">menu</i>
           </a>
         </aside>
-      <!-- START WRAPPER -->
-      <div class="wrapper">
-        <!-- START LEFT SIDEBAR NAV-->
+        <!-- END LEFT SIDEBAR NAV-->
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+        <!-- START CONTENT -->
+        <section id="content">
+          <!--start container-->
+       <div class="row">
+
+        <div class="col s1 m1 l1"></div>
+
+         <div class="col xl9 m8 s12" style="margin-top: 20px;">
+      <div class="card">
+        <div class="card-content invoice-print-area">
+          <!-- header section -->
+          <div class="row invoice-date-number">
+           
+          
+          </div>
+          <!-- logo and title -->
+          <div class="row mt-3 invoice-logo-title">
+            <div class="col m6 s12 display-flex invoice-logo mt-1 push-m6">
+             
+            </div>
+            <div class="col m6 s12 pull-m6">
+
+      <?php
+
+
+$q1 = ("SELECT * FROM usuario where idCliente=:idCliente");
+            $buscarUsuario = $dbConn->prepare($q1);
+            $buscarUsuario->bindParam(':idCliente', $_SESSION['idCliente'], PDO::PARAM_STR); 
+            $buscarUsuario->execute();
+
+while ($datos1=$buscarUsuario->fetch(PDO::FETCH_ASSOC)){
+
+  $q2 = ("SELECT razonSocial FROM empresa where idEmpresa=:idEmpresa");
+            $buscarEmpresa = $dbConn->prepare($q2);
+            $buscarEmpresa->bindParam(':idEmpresa', $_SESSION['idCliente'], PDO::PARAM_STR); 
+            $buscarEmpresa->execute();
+
+
+        if($datos1['estadoUsuario']==1){
+          $estadoUsuario=' <p class="chip green darken-1">Activo</p>';
+        }else{
+           $estadoUsuario=' <p class="chip red darken-1">Inactivo</p>';
+        }
+
+       ?>
+              <h4 class="indigo-text">Editar mi perfil</h4>
+
+             <?php echo $estadoUsuario; ?>
+
+            
+            </div>
+            <p style="text-align: right;">Fecha Registro: <?php echo $datos1['fechaRegistro']; ?></p>
+          </div>
+          <div class="divider mb-3 mt-3"></div>
+          <!-- invoice address and contact -->
+          <form method="post" id="actualizarUsuario">
+        <div class="row invoice-info">
+           <div class="input-field col s6">
+          <input placeholder="Nombre" id="first_name" type="text" name="txtNombre" class="validate" value="<?php echo $datos1['nombre']; ?>">
+          <label for="first_name">Nombre</label>
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="apellido" id="first_name" type="text" name="txtApellido"  class="validate" value="<?php echo $datos1['apellido']; ?>">
+          <label for="first_name">apellido</label>
+        </div>
+
+        <div class="input-field col s6">
+          <input placeholder="direccion" id="first_name" type="text" name="txtDireccion" class="validate" value="<?php echo $datos1['direccion']; ?>">
+          <label for="first_name">Dirección</label>
+        </div>
+
+        <div class="input-field col s6">
+          <input placeholder="correo" id="first_name" type="text" class="validate" name="txtCorreo" value="<?php echo $datos1['correo']; ?>">
+          <label for="first_name">Correo</label>
+        </div>
+
+        <div class="input-field col s6">
+          <input placeholder="Cargo" id="first_name" type="text" class="validate" name="txtCargo" value="<?php echo $datos1['cargo']; ?>" disabled >
+          <label for="first_name">Cargo</label>
+        </div>
+
+        <div class="input-field col s6">
+          <?php while ($datos2=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){ ?>
+          <input placeholder="Empresa" id="first_name" type="text" class="validate" value="<?php echo $datos2['razonSocial']; ?>" disabled>
+        <?php } ?>
+          <label for="first_name">Usuario perteneciente a la empresa</label>
+        </div>
+
+
+        <div class="input-field col s6">
+          <input placeholder="Empresa" id="first_name" type="text" name="txtUsuario" class="validate" value="<?php echo $datos1['usuario']; ?>" disabled>
+          <label for="first_name">Usuario</label>
+          <input type="text" name="txtIdCliente" value="<?php echo $datos1['idCliente']; ?>" style="display: none;">
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="Contraseña" id="first_name" name="txtContrasena" type="password" class="validate" value="<?php echo $datos1['contrasena']; ?>" disabled>
+          <label for="first_name">Contraseña</label>
+        </div>
+        
+
+
+     </form>
+   <?php  }?>  
+
+        </div>
+        <button class="btn waves-effect waves-light right" type="submit" name="action" onclick="actualizarPerfil();">Actualizar
+            <i class="material-icons right">send</i>
+          </button><br>
+
+      </div>
+
+    </div>
+       </div>
+        </section>
+
+
+        <!-- END CONTENT -->
+        <!-- START RIGHT SIDEBAR NAV-->
         <aside id="right-sidebar-nav">
           <ul id="chat-out" class="side-nav rightside-navigation">
             <li class="li-hover">
@@ -612,13 +598,7 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                 <div id="chatapp" class="col s12">
                   <h6 class="mt-5 mb-3 ml-3">REGISTRO LLAMADAS</h6>
                   <div id="registroLllamadasMostrar" class="collection border-none">
-                   <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color blue lighten-1">info_outline</i>
-                    </div>
-                    <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">No hay llamadas!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
-                    </div>
+                   
                     
                   </div>
                 </div>
@@ -626,268 +606,75 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
                   <h6 class="mt-5 mb-3 ml-3">EVENTOS RECIENTES</h6>
                   <div class="activity" id="registroEventos11">
                     <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">info_outline</i>
+                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">add_shopping_cart</i>
                     </div>
                     <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">Aun no hay eventos!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
+                      <a href="#" class="deep-purple-text medium-small">just now</a>
+                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jim Doe Purchased new equipments for zonal office.</p>
                     </div>
-                    
-
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </aside>
-        <!-- END LEFT SIDEBAR NAV-->
-        <!-- //////////////////////////////////////////////////////////////////////////// -->
-        <!-- START CONTENT -->
-        <section id="content">
-          <!--start container-->
-          <div class="container">
-       <?php
-         $query1 = ("SELECT * FROM empresa where idempresa=:idempresa");
-            $buscarEmpresa = $dbConn->prepare($query1);
-            $buscarEmpresa->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
-            $buscarEmpresa->execute();
-
-            $query4 = ("SELECT * FROM factura left join pagos on factura.numeroFactura=pagos.noFactura where factura.idCliente=:idempresa and codigoMes=:codigoMes");
-            $buscarAbonos = $dbConn->prepare($query4);
-            $buscarAbonos->bindParam(':idempresa', $_GET['user'], PDO::PARAM_INT); 
-            $buscarAbonos->bindParam(':codigoMes', $datoBuscar, PDO::PARAM_INT); 
-            $buscarAbonos->execute();
-
-            $noHayAbono=$buscarAbonos->rowCount();
-            if($noHayAbono==0){
-              $abonosMes=0;
-            }
-            while ($datos4=$buscarAbonos->fetch(PDO::FETCH_ASSOC)){
-               $abonosMes=$datos4['monto'];
-            }
-
-  
-            while ($datos1=$buscarEmpresa->fetch(PDO::FETCH_ASSOC)){
-
-               $query2 = ("SELECT * FROM factura left join pagos on factura.numeroFactura=pagos.noFactura where factura.idCliente=:idempresa and codigoMes>=1909 and codigoMes<:mesActual" ); 
-            $buscarPagos = $dbConn->prepare($query2);
-            $buscarPagos->bindParam(':idempresa', $datos1['idempresa'], PDO::PARAM_INT);
-            $buscarPagos->bindParam(':mesActual', $datoBuscar, PDO::PARAM_INT);
-            $buscarPagos->execute();
-            $hayPagos=$buscarPagos->rowCount();
-
-            while ($datos3=$buscarPagos->fetch(PDO::FETCH_ASSOC)){
-               @$saldoAnterior+=$datos3['montoFactura']-$datos3['monto'];
-
-            }
-
-            
-        ?>     
-
-<h5 style="margin-top: 20px; text-align: center"><?php echo $datos1['razonSocial']; ?></h5> 
-
-
-<div class="col s1 m1 l1"></div>
-
-      <div class="col xl9 m8 s12 l9">
-      <div class="card">
-<div style="padding: 10px;">
-<a class="btn-floating btn-large waves-effect waves-light red" onclick="imprimirEstado();"><i class="material-icons">local_printshop
-</i></a>
-</div>       
-
- <div class="card-content invoice-print-area" id="estadoCuenta">
-          <!-- header section -->
-          <div class="row invoice-date-number">
-            <div class="col xl4 s12">
-              <span>6ta Av. "A" 13-24 zona 9<br></span>
-              <span>Torre empresarial Cannet of 103<br></span>
-              <span>Guatemala, Guatemala<br></span>
-              <span>PBX(502) 2381-0888</span>
-
-            </div>
-            <div class="col xl8 s12">
-              <div class="invoice-date display-flex align-items-center flex-wrap">
-                <div class="mr-3" style="text-align: right;">
-                  <small>Fecha Actual:</small>
-                  <span><?php echo $fechaCompleto; ?></span>
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <!-- logo and title -->
-          <div class="row mt-3 invoice-logo-title">
-            <div class="col m6 s12 display-flex invoice-logo mt-1 push-m6">
-              <img src="../img/logo.png" alt="logo" height="100" width="100">
-            </div>
-            <div class="col m6 s12 pull-m6">
-              <h4 class="indigo-text">Officient S.A</h4>
-            </div>
-
-          </div>
-           <h5>Nombre Cliente: <span style="font-size:15pt;"><?php echo $datos1['razonSocial']; ?></span></h5>
-           <h5>Estado de cuenta actual: <span style="font-size:15pt;"><?php echo $mesMostrar; ?></span></h5>
-          
-          <div class="divider mb-3 mt-3"></div>
-
-          <!-- invoice address and contact -->
-          <div class="row invoice-info">
-      <table class="striped ">
-        <thead>
-          <tr>
-              <th>Cargos del mes</th>
-              <th>Precio</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-   <?php 
-   $query3 = ("SELECT * FROM extras where codigoMes=:codigoMes and idCliente=:idCliente" ); 
-            $buscarExtras = $dbConn->prepare($query3);
-            $buscarExtras->bindParam(':codigoMes', $datoBuscar, PDO::PARAM_INT);
-            $buscarExtras->bindParam(':idCliente', $datos1['idempresa'], PDO::PARAM_INT);
-            $buscarExtras->execute();
-            $hayExtras=$buscarExtras->rowCount();
-
-
- while ($datos2=$buscarExtras->fetch(PDO::FETCH_ASSOC)){
-    @$totalExtras+=$datos2['totalExtra'];
-
-   ?>       
-          <tr>
-            <td><?php echo $datos2['descripcion']; ?></td>
-            <td><?php echo 'Q.'.$datos2['totalExtra']; ?></td>
-          </tr>
-  <?php } ?>
-          <tr>
-            <td >Subtotal mes actual:</td>
-            <td><?php echo 'Q'.sprintf("%.2f", $totalExtras); ?></td>
-          </tr>
-
-
-        </tbody>
-      </table>
-
-
-      <h5></h5>
-      <table class="striped ">
-        <thead>
-          <tr>
-              <th>Resumen</th>
-              <th></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-          <td>Saldo Anterior</td>
-          <td><?php if($saldoAnterior<=0){$saldoAnterior=0; } echo 'Q.'.$saldoAnterior; ?></td>
-          </tr>
-          <tr>
-          <td>Abonos Realizado</td>
-          <td><?php echo 'Q.'.$abonosMes; ?></td>
-          </tr>
-
-          <tr>
-          <td>Total Cargos Mes</td>
-          <td><?php $totalCargo=$totalExtras; echo 'Q.'.$totalCargo; ?></td>
-          </tr>
-
-        </tbody>
-       </table>   
-
-
-          </div>
-        
-          <!-- product details table-->
-          <div class="invoice-product-details">
-          
-          </div>
-          <!-- invoice subtotal -->
-          <div class="divider mt-3 mb-3"></div>
-          <div class="invoice-subtotal">
-            <div class="row">
-              <div class="col m5 s12">
-                
-              </div>
-              <div class="col xl4 m7 s12 offset-xl3">
-                <ul>
-                  <li class="divider mt-2 mb-2"></li>
-                  <li class="display-flex justify-content-between">
-                    <span class="invoice-subtotal-title">Total a Pagar</span>
-                    <h6 class="invoice-subtotal-value"><span style="font-size:18pt;">Q.<span><?php $totalFinal=$saldoAnterior+$totalExtras-$abonosMes; echo $totalFinal ?></h6>
-                  </li>
-                  <li class="display-flex justify-content-between">
-                </ul>
-              </div>
-
-            </div>
-          </div>
-
-      </div>
-    </div>
-
-
-
-
-
-
-
-<?php } ?>
-
-
-          </div>
-          <!--end container-->
-        </section>
-        <!-- END CONTENT -->
-        <!-- START RIGHT SIDEBAR NAV-->
-       <aside id="right-sidebar-nav">
-          <ul id="chat-out" class="side-nav rightside-navigation">
-            <li class="li-hover">
-              <div class="row">
-                <div class="col s12 border-bottom-1 mt-5">
-                  <ul class="tabs">
-                    <li class="tab col s4">
-                      <a href="#activity" class="active">
-                        <span class="material-icons">graphic_eq</span>
-                      </a>
-                    </li>
-                    <li class="tab col s4">
-                      <a href="#chatapp">
-                        <span class="material-icons">call</span>
-                      </a>
-                    </li>
-
-                  </ul>
-                </div>
-                
-                <div id="chatapp" class="col s12">
-                  <h6 class="mt-5 mb-3 ml-3">REGISTRO LLAMADAS</h6>
-                  <div id="registroLllamadasMostrar" class="collection border-none">
-                   <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color blue lighten-1">info_outline</i>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color cyan lighten-2">airplanemode_active</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="cyan-text medium-small">Yesterday</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Your Next flight for USA will be on 15th August 2015.</p>
+                      </div>
                     </div>
-                    <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">No hay llamadas!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
+                        <i class="material-icons white-text icon-bg-color green lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="green-text medium-small">5 Days Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
+                      </div>
                     </div>
-                    
-                  </div>
-                </div>
-                <div id="activity" class="col s12">
-                  <h6 class="mt-5 mb-3 ml-3">EVENTOS RECIENTES</h6>
-                  <div class="activity" id="registroEventos11">
-                    <div class="col s3 mt-2 center-align recent-activity-list-icon">
-                      <i class="material-icons white-text icon-bg-color deep-purple lighten-2">info_outline</i>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color amber lighten-2">store</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="amber-text medium-small">1 Week Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
+                      </div>
                     </div>
-                    <div class="col s9 recent-activity-list-text">
-                      <a href="#" class="deep-purple-text medium-small">Aun no hay eventos!</a>
-                      <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small"></p>
+                    <div class="recent-activity-list row">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color deep-orange lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="deep-orange-text medium-small">2 Week Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
+                      </div>
                     </div>
-                    
-
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon medium-small">
+                        <i class="material-icons white-text icon-bg-color brown lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="brown-text medium-small">1 Month Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list chat-out-list row mb-0">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color deep-purple lighten-2">store</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="deep-purple-text medium-small">3 Month Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
+                      </div>
+                    </div>
+                    <div class="recent-activity-list row">
+                      <div class="col s3 mt-2 center-align recent-activity-list-icon">
+                        <i class="material-icons white-text icon-bg-color grey lighten-2">settings_voice</i>
+                      </div>
+                      <div class="col s9 recent-activity-list-text">
+                        <a href="#" class="grey-text medium-small">1 Year Ago</a>
+                        <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -915,12 +702,14 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
 
 <p id="uriEnviar" style="display: none;"><?php echo $_SESSION['uri']; ?></p>
 
+
     <script type="text/javascript">
-      
+
+
    //uri general para todos los procesos
     var uri1=$("#uriEnviar").text();
 
-         function mostrarRegistroLlamadas(){
+               function mostrarRegistroLlamadas(){
       var registroLlamadas= $.ajax({
         url: uri1+"controller/staticLateralIzquierdoC.php",
         dataType: "text",
@@ -944,21 +733,25 @@ background: linear-gradient(to left, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/
 
     }
     setInterval(mostrarEventos,1000);
+    
 
+   function actualizarPerfil(){
 
+    var datosGuardar= $("#actualizarUsuario").serialize();
+      alert(datosGuardar);
+      $.ajax({
+        type: "POST",
+        url: uri1+"controller/perfilC.php",
+        data: datosGuardar,
+        success:function(r){
+          
+            M.toast({html: 'Se actualizo de manera correcta el perfil :)', classes: 'rounded'});
+            
+        }
 
-function imprimirEstado(){
-  //alert('fuciono'); 
-  var cantenido=document.getElementById('estadoCuenta').innerHTML;
-  var contenidoEstado=document.body.innerHTML;
+      });
 
-  document.body.innerHTML = cantenido;
-
-   window.print();
-   document.body.innerHTML = contenidoEstado;
-}
-
-
+   } 
 
     </script>
     <!-- END FOOTER -->
