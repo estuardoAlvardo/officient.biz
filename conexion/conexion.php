@@ -1,6 +1,6 @@
 <?php
  
-$databaseHost = 'localhost:8889';
+$databaseHost = 'localhost';
 $databaseName = 'officient';
 $databaseUsername = 'root';
 $databasePassword = 'Admin11!';
